@@ -19,7 +19,6 @@ uses
   Classes,
   SysUtils,
   StrUtils,
-  Dialogs,
   Variants,
   DB,
   TypInfo,
@@ -308,9 +307,11 @@ var
 {$IFNDEF FPC}
   Key,
 {$ENDIF}
+  PropertyName,
   FieldName: string;
   PP: PPropList;
 begin
+  SetLength(result, 0);
   if not Assigned(Instance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.GetFieldNames: Instance not assigned.');
 
@@ -321,14 +322,15 @@ begin
   GetPropInfos(Instance.ClassInfo, PP);
   for Index := 0 to Count - 1 do
   begin
-    FieldName := PP^[Index]^.Name;
+    PropertyName := PP^[Index]^.Name;
+    FieldName := PropertyName;
 {$IFDEF FPC}
-    DataIndex := FFieldToPropertyMap.IndexOfData(FieldName);
+    DataIndex := FFieldToPropertyMap.IndexOfData(PropertyName);
     if DataIndex <> -1 then
       FieldName := FFieldToPropertyMap.Keys[DataIndex];
 {$ELSE}
     for Key in FFieldToPropertyMap.Keys do
-      if UpperCase(FFieldToPropertyMap.Items[Key]) = UpperCase(FieldName) then
+      if UpperCase(FFieldToPropertyMap.Items[Key]) = UpperCase(PropertyName) then
         FieldName := Key;
 {$ENDIF}
     result[Index] := FieldName;
