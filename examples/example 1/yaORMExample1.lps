@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <Version Value="9"/>
+    <BuildModes Active="Default"/>
+    <Units Count="9">
+      <Unit0>
+        <Filename Value="yaORMExample1.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <TopLine Value="83"/>
+        <CursorPos Y="116"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="demo.businesslogic.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="127" Y="22"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="demo.orm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DEMO.ORM"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="64"/>
+        <CursorPos X="125" Y="98"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="../../src/yaorm.json.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="../../src/yaorm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="311"/>
+        <CursorPos X="62" Y="328"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="../../src/yaorm.poorman.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../../src/yaorm.relationships.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Relationships"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="5"/>
+        <CursorPos X="3" Y="31"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="../../src/yaorm.sql.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.SQL"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="304"/>
+        <CursorPos X="39" Y="320"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../../src/yaorm.types.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit8>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="../../src/yaorm.sql.pas"/>
+        <Caret Line="230" Column="111" TopLine="220"/>
+      </Position1>
+      <Position2>
+        <Filename Value="../../src/yaorm.sql.pas"/>
+        <Caret Line="242" TopLine="220"/>
+      </Position2>
+      <Position3>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="431" TopLine="413"/>
+      </Position3>
+      <Position4>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="432" TopLine="413"/>
+      </Position4>
+      <Position5>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="434" TopLine="413"/>
+      </Position5>
+      <Position6>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="437" TopLine="413"/>
+      </Position6>
+      <Position7>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="328" TopLine="312"/>
+      </Position7>
+      <Position8>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="329" TopLine="312"/>
+      </Position8>
+      <Position9>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="336" TopLine="312"/>
+      </Position9>
+      <Position10>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="323" TopLine="312"/>
+      </Position10>
+      <Position11>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="325" TopLine="312"/>
+      </Position11>
+      <Position12>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="326" TopLine="312"/>
+      </Position12>
+      <Position13>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="328" TopLine="312"/>
+      </Position13>
+      <Position14>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="329" TopLine="312"/>
+      </Position14>
+      <Position15>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="336" TopLine="312"/>
+      </Position15>
+      <Position16>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="323" TopLine="312"/>
+      </Position16>
+      <Position17>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="338" TopLine="312"/>
+      </Position17>
+      <Position18>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="339" TopLine="312"/>
+      </Position18>
+      <Position19>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="438" TopLine="420"/>
+      </Position19>
+      <Position20>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="439" TopLine="420"/>
+      </Position20>
+      <Position21>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="440" TopLine="420"/>
+      </Position21>
+      <Position22>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="441" TopLine="420"/>
+      </Position22>
+      <Position23>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="442" TopLine="420"/>
+      </Position23>
+      <Position24>
+        <Filename Value="../../src/yaorm.sql.pas"/>
+        <Caret Line="243" TopLine="220"/>
+      </Position24>
+      <Position25>
+        <Filename Value="../../src/yaorm.sql.pas"/>
+        <Caret Line="244" TopLine="220"/>
+      </Position25>
+      <Position26>
+        <Filename Value="../../src/yaorm.sql.pas"/>
+        <Caret Line="246" TopLine="220"/>
+      </Position26>
+      <Position27>
+        <Filename Value="../../src/yaorm.sql.pas"/>
+        <Caret Line="257" TopLine="241"/>
+      </Position27>
+      <Position28>
+        <Filename Value="../../src/yaorm.sql.pas"/>
+        <Caret Line="242" TopLine="236"/>
+      </Position28>
+      <Position29>
+        <Filename Value="../../src/yaorm.pas"/>
+        <Caret Line="328" TopLine="312"/>
+      </Position29>
+      <Position30>
+        <Filename Value="../../src/yaorm.sql.pas"/>
+        <Caret Line="247" Column="23" TopLine="236"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>
