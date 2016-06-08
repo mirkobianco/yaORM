@@ -43,6 +43,7 @@
       <Unit3>
         <Filename Value="../../src/yaorm.json.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.JSON"/>
       </Unit3>
       <Unit4>
         <Filename Value="../../src/yaorm.pas"/>
@@ -66,6 +67,7 @@
       <Unit8>
         <Filename Value="../../src/yaorm.types.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Types"/>
       </Unit8>
     </Units>
   </ProjectOptions>

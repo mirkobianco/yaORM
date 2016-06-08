@@ -50,7 +50,7 @@ type
 
 implementation
 
-{ yaORMJSON }
+{ TyaORMToJSONConverter }
 
 function TyaORMToJSONConverter<T>.JSONDataFromString(const JSON: TJSONStringType): TJSONData;
 begin
