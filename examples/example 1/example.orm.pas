@@ -12,7 +12,8 @@ uses
   sqlite3conn,
   yaORM,
   yaORM.SQL,
-  Example.BusinessLogic;
+  Example.Address,
+  Example.Customer;
 
 type
 

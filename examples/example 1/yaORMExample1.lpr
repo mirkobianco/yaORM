@@ -12,8 +12,9 @@ uses
   { you can add units after this },
   yaORM,
   yaORM.Types,
-  Demo.BusinessLogic,
-  Demo.ORM;
+  Example.Address,
+  Example.Customer,
+  Example.ORM;
 
 type
 
