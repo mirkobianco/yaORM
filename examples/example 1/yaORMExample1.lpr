@@ -36,87 +36,87 @@ type
 
 procedure TyaORMExample.CreateDatabase;
 var
-  SQL: string;
+  LSQL: string;
 begin
   ORMS.Connection.Open;
 
-  SQL := 'CREATE TABLE CUSTOMER(' + #13#10 +
+  LSQL := 'CREATE TABLE CUSTOMER(' + #13#10 +
          'CustomerId INTEGER PRIMARY KEY,' + #13#10 +
          'AddressId INTEGER,' + #13#10 +
          'Name TEXT,' + #13#10 +
          'Notes TEXT)';
 
-  ORMS.Connection.ExecuteDirect(SQL);
+  ORMS.Connection.ExecuteDirect(LSQL);
 
-  SQL := 'CREATE TABLE ADDRESS(' + #13#10 +
+  LSQL := 'CREATE TABLE ADDRESS(' + #13#10 +
          'AddressId INTEGER PRIMARY KEY,' + #13#10 +
          'Description TEXT)';
 
-  ORMS.Connection.ExecuteDirect(SQL);
+  ORMS.Connection.ExecuteDirect(LSQL);
 end;
 
 procedure TyaORMExample.Example;
 var
-  Customer: TCustomer;
-  Customers: TCustomers;
-  Address: TAddress;
-  Filter: IyaFilter;
+  LCustomer: TCustomer;
+  LCustomers: TCustomers;
+  LAddress: TAddress;
+  LFilter: IyaFilter;
 begin
-  Customer := ORMS.CustomerORM.New;
-  Address := ORMS.AddressORM.New;
+  LCustomer := ORMS.CustomerORM.New;
+  LAddress := ORMS.AddressORM.New;
 
   try
-    Customer.CustomerId := 1;
-    Customer.Name := 'Mirko Bianco';
+    LCustomer.CustomerId := 1;
+    LCustomer.Name := 'Mirko Bianco';
 
-    Address.AddressId := 1;
-    Address.Description := 'Mirko Bianco''s Address';
-    ORMS.AddressORM.Insert(Address);
-    Customer.Address := Address; //Address is assigned to the Customer, please check TyaOneToOneRelationship for objects ownership
-    if Assigned(Customer.Address) then
-      Writeln(Customer.Address.Description);
+    LAddress.AddressId := 1;
+    LAddress.Description := 'Mirko Bianco''s Address';
+    ORMS.AddressORM.Insert(LAddress);
+    LCustomer.Address := LAddress; //LAddress is assigned to the LCustomer, please check TyaOneToOneRelationship for objects ownership
+    if Assigned(LCustomer.Address) then
+      Writeln(LCustomer.Address.Description);
 
-    ORMS.CustomerORM.Insert(Customer);
+    ORMS.CustomerORM.Insert(LCustomer);
   finally
-    FreeAndNil(Customer);
-    //Customer takes care of the Address
+    FreeAndNil(LCustomer);
+    //LCustomer takes care of the LAddress
   end;
 
-  Customer := ORMS.CustomerORM.New;
+  LCustomer := ORMS.CustomerORM.New;
   try
-    Customer.CustomerId := 2;
-    Customer.Name := 'Someone Else';
-    Customer.AddressId := 1;
-    if Assigned(Customer.Address) then
-        Writeln(Customer.Address.Description);
-    ORMS.CustomerORM.Insert(Customer);
+    LCustomer.CustomerId := 2;
+    LCustomer.Name := 'Someone Else';
+    LCustomer.AddressId := 1;
+    if Assigned(LCustomer.Address) then
+        Writeln(LCustomer.Address.Description);
+    ORMS.CustomerORM.Insert(LCustomer);
   finally
-    FreeAndNil(Customer);
+    FreeAndNil(LCustomer);
   end;
 
-  Customer := ORMS.CustomerORM.New;
+  LCustomer := ORMS.CustomerORM.New;
   try
-    Customer.CustomerId := 3;
-    Customer.Name := 'Another Bianco';
-    Customer.Notes := 'Test';
-    ORMS.CustomerORM.Insert(Customer);
+    LCustomer.CustomerId := 3;
+    LCustomer.Name := 'Another Bianco';
+    LCustomer.Notes := 'Test';
+    ORMS.CustomerORM.Insert(LCustomer);
   finally
-    FreeAndNil(Customer);
+    FreeAndNil(LCustomer);
   end;
 
-  if ORMS.CustomerORM.LoadList('SELECT * FROM CUSTOMER', Customers) then
-    Writeln(IntToStr(Customers.Count))
+  if ORMS.CustomerORM.LoadList('SELECT * FROM CUSTOMER', LCustomers) then
+    Writeln(IntToStr(LCustomers.Count))
   else
     Writeln('Not Found');
-  FreeAndNil(Customers);
+  FreeAndNil(LCustomers);
 
-  Filter := ORMS.CustomerORM.NewFilter;
-  Filter.AddCondition('Name', ftEndsWith, 'Bianco');
-  if ORMS.CustomerORM.LoadList(Filter, Customers) then
-    Writeln(IntToStr(Customers.Count))
+  LFilter := ORMS.CustomerORM.NewFilter;
+  LFilter.AddCondition('Name', ftEndsWith, 'Bianco');
+  if ORMS.CustomerORM.LoadList(LFilter, LCustomers) then
+    Writeln(IntToStr(LCustomers.Count))
   else
     Writeln('Not Found');
-  FreeAndNil(Customers);
+  FreeAndNil(LCustomers);
 end;
 
 procedure TyaORMExample.DoRun;

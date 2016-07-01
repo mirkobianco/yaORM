@@ -21,8 +21,8 @@ type
     FAddressId: integer;
     FDescription: string;
   strict protected
-    procedure SetAddressId(const AddressId: integer);
-    procedure SetDescription(const Description: string);
+    procedure SetAddressId(const AAddressId: integer);
+    procedure SetDescription(const ADescription: string);
   published
     property AddressId: integer read FAddressId write SetAddressId;
     property Description: string read FDescription write SetDescription;
@@ -36,18 +36,18 @@ implementation
 
 { TAddress }
 
-procedure TAddress.SetAddressId(const AddressId: integer);
+procedure TAddress.SetAddressId(const AAddressId: integer);
 begin
-  if AddressId = FAddressId then
+  if AAddressId = FAddressId then
     Exit;
-  FAddressId := AddressId;
+  FAddressId := AAddressId;
 end;
 
-procedure TAddress.SetDescription(const Description: string);
+procedure TAddress.SetDescription(const ADescription: string);
 begin
-  if Description = FDescription then
+  if ADescription = FDescription then
     Exit;
-  FDescription := Description;
+  FDescription := ADescription;
 end;
 
 end.

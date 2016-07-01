@@ -31,15 +31,15 @@ type
     FAddressId: TNullableInteger;
     FCustomerToAddressRelationship: TyaOneToOneRelationship<TCustomer, TAddress>;
   strict protected
-    procedure SetCustomerId(const CustomerId: integer);
-    procedure SetName(const Name: string);
-    procedure Setnotes(const Notes: TNullableString);
-    procedure SetAddressId(const AddressId: TNullableInteger);
+    procedure SetCustomerId(const ACustomerId: integer);
+    procedure SetName(const AName: string);
+    procedure Setnotes(const ANotes: TNullableString);
+    procedure SetAddressId(const AAddressId: TNullableInteger);
 
     function GetAddress: TAddress;
-    procedure SetAddress(const Address: TAddress);
+    procedure SetAddress(const AAddress: TAddress);
   public
-    constructor Create(const CustomerORM: ICustomerORM; const AddressORM: IAddressORM); reintroduce;
+    constructor Create(const ACustomerORM: ICustomerORM; const AAddressORM: IAddressORM); reintroduce;
     destructor Destroy; override;
 
     property Address: TAddress read GetAddress write SetAddress;
@@ -56,32 +56,32 @@ implementation
 
 { TCustomer }
 
-procedure TCustomer.SetCustomerId(const CustomerId: integer);
+procedure TCustomer.SetCustomerId(const ACustomerId: integer);
 begin
-  if CustomerId = FCustomerId then
+  if ACustomerId = FCustomerId then
     Exit;
-  FCustomerId := CustomerId;
+  FCustomerId := ACustomerId;
 end;
 
-procedure TCustomer.SetName(const Name: string);
+procedure TCustomer.SetName(const AName: string);
 begin
-  if SameText(Name, FName) then
+  if SameText(AName, FName) then
     Exit;
-  FName := Name;
+  FName := AName;
 end;
 
-procedure TCustomer.Setnotes(const Notes: TNullableString);
+procedure TCustomer.Setnotes(const ANotes: TNullableString);
 begin
-  if SameVariantValue(FNotes, Notes) then
+  if SameVariantValue(FNotes, ANotes) then
     Exit;
-  FNotes := Notes;
+  FNotes := ANotes;
 end;
 
-procedure TCustomer.SetAddressId(const AddressId: TNullableInteger);
+procedure TCustomer.SetAddressId(const AAddressId: TNullableInteger);
 begin
-  if SameVariantValue(FAddressId, AddressId) then
+  if SameVariantValue(FAddressId, AAddressId) then
     Exit;
-  FAddressId := AddressId;
+  FAddressId := AAddressId;
   FCustomerToAddressRelationship.CheckLinkedObject;
 end;
 
@@ -90,14 +90,14 @@ begin
   result := FCustomerToAddressRelationship.LinkedObject;
 end;
 
-procedure TCustomer.SetAddress(const Address: TAddress);
+procedure TCustomer.SetAddress(const AAddress: TAddress);
 begin
-  FCustomerToAddressRelationship.LinkedObject := Address;
+  FCustomerToAddressRelationship.LinkedObject := AAddress;
 end;
 
-constructor TCustomer.Create(const CustomerORM: ICustomerORM; const AddressORM: IAddressORM);
+constructor TCustomer.Create(const ACustomerORM: ICustomerORM; const AAddressORM: IAddressORM);
 begin
-  FCustomerToAddressRelationship := TyaOneToOneRelationship<TCustomer, TAddress>.Create(self, TStringArray.Create('AddressId'), CustomerORM, AddressORM);
+  FCustomerToAddressRelationship := TyaOneToOneRelationship<TCustomer, TAddress>.Create(self, TStringArray.Create('AddressId'), ACustomerORM, AAddressORM);
 end;
 
 destructor TCustomer.Destroy;

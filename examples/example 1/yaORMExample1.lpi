@@ -44,6 +44,7 @@
       <Unit3>
         <Filename Value="../../src/yaorm.poorman.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.PoorMan"/>
       </Unit3>
       <Unit4>
         <Filename Value="../../src/yaorm.relationships.pas"/>
@@ -68,6 +69,7 @@
       <Unit8>
         <Filename Value="example.address.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="Example.Address"/>
       </Unit8>
       <Unit9>
         <Filename Value="example.customer.pas"/>
@@ -86,6 +88,31 @@
       <OtherUnitFiles Value="../../src"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <SyntaxMode Value="Delphi"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <SmartLinkUnit Value="True"/>
+      <RelocatableUnit Value="True"/>
+      <Optimizations>
+        <OptimizationLevel Value="4"/>
+      </Optimizations>
+    </CodeGeneration>
+    <Linking>
+      <Debugging>
+        <UseHeaptrc Value="True"/>
+        <TrashVariables Value="True"/>
+      </Debugging>
+    </Linking>
+    <Other>
+      <Verbosity>
+        <ShoLineNum Value="True"/>
+        <ShowHintsForUnusedUnitsInMainSrc Value="True"/>
+        <ShowHintsForSenderNotUsed Value="True"/>
+      </Verbosity>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">
