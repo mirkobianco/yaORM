@@ -27,62 +27,62 @@ type
   TyaPoorManORM<T: TObject> = class(TyaAbstractORM<T>)
   public
     //IyaORM
-    function Load(const KeyValues: TVariantArray; out Instance: T): boolean; override;
-    function LoadList(const SQL: string; out List: TObjectList<T>): boolean; overload; override;
-    function LoadList(const Filter: IyaFilter; out List: TObjectList<T>): boolean; overload; override;
-    function LoadList(const KeyValues: TVariantArray; out List: TObjectList<T>): boolean; overload; override;
-    procedure Insert(const Instance: T); override;
-    procedure Update(const Instance: T); override;
-    procedure Delete(const Instance: T); overload; override;
-    procedure Delete(const KeyValues: TVariantArray); overload; override;
-    procedure Delete(const Filter: IyaFilter); overload; override;
+    function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean; override;
+    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload; override;
+    function LoadList(const AFilter: IyaFilter; out LList: TObjectList<T>): boolean; overload; override;
+    function LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean; overload; override;
+    procedure Insert(const AInstance: T); override;
+    procedure Update(const AInstance: T); override;
+    procedure Delete(const AInstance: T); overload; override;
+    procedure Delete(const AKeyValues: TVariantArray); overload; override;
+    procedure Delete(const AFilter: IyaFilter); overload; override;
   end;
 
 implementation
 
 { TyaPoorManORM }
 
-function TyaPoorManORM<T>.Load(const KeyValues: TVariantArray; out Instance: T): boolean;
+function TyaPoorManORM<T>.Load(const AKeyValues: TVariantArray; out OInstance: T): boolean;
 begin
   raise EyaORMException.Create('TyaPoorManORM<T>.Load: Operation non supported.');
 end;
 
-function TyaPoorManORM<T>.LoadList(const SQL: string; out List: TObjectList<T>): boolean;
+function TyaPoorManORM<T>.LoadList(const ASQL: string; out OList: TObjectList<T>): boolean;
 begin
   raise EyaORMException.Create('TyaPoorManORM<T>.LoadList: Operation non supported.');
 end;
 
-function TyaPoorManORM<T>.LoadList(const Filter: IyaFilter; out List: TObjectList<T>): boolean;
+function TyaPoorManORM<T>.LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean;
 begin
   raise EyaORMException.Create('TyaPoorManORM<T>.LoadList: Operation non supported.');
 end;
 
-function TyaPoorManORM<T>.LoadList(const KeyValues: TVariantArray; out List: TObjectList<T>): boolean;
+function TyaPoorManORM<T>.LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean;
 begin
   raise EyaORMException.Create('TyaPoorManORM<T>.LoadList: Operation non supported.');
 end;
 
-procedure TyaPoorManORM<T>.Insert(const Instance: T);
+procedure TyaPoorManORM<T>.Insert(const AInstance: T);
 begin
   raise EyaORMException.Create('TyaPoorManORM<T>.Insert: Operation non supported.');
 end;
 
-procedure TyaPoorManORM<T>.Update(const Instance: T);
+procedure TyaPoorManORM<T>.Update(const AInstance: T);
 begin
   raise EyaORMException.Create('TyaPoorManORM<T>.Update: Operation non supported.');
 end;
 
-procedure TyaPoorManORM<T>.Delete(const Instance: T);
+procedure TyaPoorManORM<T>.Delete(const AInstance: T);
 begin
   raise EyaORMException.Create('TyaPoorManORM<T>.Delete: Operation non supported.');
 end;
 
-procedure TyaPoorManORM<T>.Delete(const KeyValues: TVariantArray);
+procedure TyaPoorManORM<T>.Delete(const AKeyValues: TVariantArray);
 begin
   raise EyaORMException.Create('TyaPoorManORM<T>.Delete: Operation non supported.');
 end;
 
-procedure TyaPoorManORM<T>.Delete(const Filter: IyaFilter);
+procedure TyaPoorManORM<T>.Delete(const AFilter: IyaFilter);
 begin
   raise EyaORMException.Create('TyaPoorManORM<T>.Delete: Operation non supported.');
 end;

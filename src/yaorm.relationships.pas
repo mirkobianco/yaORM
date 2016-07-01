@@ -39,12 +39,12 @@ type
     FCheckIsEnabled: boolean;
 
     function GetLinkedObject: TLinkedObject;
-    procedure SetLinkedObject(const LinkedObject: TLinkedObject);
+    procedure SetLinkedObject(const ALinkedObject: TLinkedObject);
   public
-    constructor Create(const MasterObject: TMasterObject;
-                       const MasterObjectLinkedKeys: TStringArray;
-                       const MasterORM: IyaORM<TMasterObject>;
-                       const LinkedORM: IyaORM<TLinkedObject>);
+    constructor Create(const AMasterObject: TMasterObject;
+                       const AMasterObjectLinkedKeys: TStringArray;
+                       const AMasterORM: IyaORM<TMasterObject>;
+                       const ALinkedORM: IyaORM<TLinkedObject>);
     destructor Destroy; override;
 
     procedure CheckLinkedObject;
@@ -64,10 +64,10 @@ type
     FMasterORM: IyaORM<TMasterObject>;
     FDetailORM: IyaORM<TDetailObject>;
   public
-    constructor Create(const MasterObject: TMasterObject;
-                       const MasterObjectDetailKeys: TStringArray;
-                       const MasterORM: IyaORM<TMasterObject>;
-                       const DetailORM: IyaORM<TDetailObject>);
+    constructor Create(const AMasterObject: TMasterObject;
+                       const AMasterObjectDetailKeys: TStringArray;
+                       const AMasterORM: IyaORM<TMasterObject>;
+                       const ADetailORM: IyaORM<TDetailObject>);
     destructor Destroy; override;
 
     procedure CheckDetailObjects;
@@ -78,15 +78,15 @@ implementation
 
 { TyaOneToManyRelationship }
 
-constructor TyaOneToManyRelationship<TMasterObject, TDetailObject>.Create(const MasterObject: TMasterObject;
-                                                                          const MasterObjectDetailKeys: TStringArray;
-                                                                          const MasterORM: IyaORM<TMasterObject>;
-                                                                          const DetailORM: IyaORM<TDetailObject>);
+constructor TyaOneToManyRelationship<TMasterObject, TDetailObject>.Create(const AMasterObject: TMasterObject;
+                                                                          const AMasterObjectDetailKeys: TStringArray;
+                                                                          const AMasterORM: IyaORM<TMasterObject>;
+                                                                          const ADetailORM: IyaORM<TDetailObject>);
 begin
-  FMasterObject := MasterObject;
-  FMasterObjectDetailKeys := MasterObjectDetailKeys;
-  FMasterORM := MasterORM;
-  FDetailORM := DetailORM;
+  FMasterObject := AMasterObject;
+  FMasterObjectDetailKeys := AMasterObjectDetailKeys;
+  FMasterORM := AMasterORM;
+  FDetailORM := ADetailORM;
   CheckDetailObjects;
 end;
 
@@ -100,23 +100,23 @@ end;
 
 procedure TyaOneToManyRelationship<TMasterObject, TDetailObject>.CheckDetailObjects;
 var
-  Key: string;
-  IsNull: boolean;
-  KeyValues: TVariantArray;
+  LKey: string;
+  LIsNull: boolean;
+  LKeyValues: TVariantArray;
 begin
-  IsNull := false;
-  SetLength(KeyValues, Length(FMasterObjectDetailKeys));
-  for Key in FMasterObjectDetailKeys do
-    if VariantIsEmptyOrNull(FMasterORM.GetPropertyValue(FMasterObject, Key)) then
-      IsNull := true;
+  LIsNull := false;
+  SetLength(LKeyValues, Length(FMasterObjectDetailKeys));
+  for LKey in FMasterObjectDetailKeys do
+    if VariantIsEmptyOrNull(FMasterORM.GetPropertyValue(FMasterObject, LKey)) then
+      LIsNull := true;
 
-  KeyValues := FMasterORM.GetFieldValues(FMasterObjectDetailKeys, FMasterObject);
+  LKeyValues := FMasterORM.GetFieldValues(FMasterObjectDetailKeys, FMasterObject);
 
   FreeAndNil(FDetailObjects);
-  if IsNull then
+  if LIsNull then
     Exit;
 
-  FDetailORM.LoadList(KeyValues, FDetailObjects);
+  FDetailORM.LoadList(LKeyValues, FDetailObjects);
 end;
 
 function TyaOneToManyRelationship<TMasterObject, TDetailObject>.GetDetailObjects: TObjectList<TDetailObject>;
@@ -126,15 +126,15 @@ end;
 
 { TyaOneToOneRelationship }
 
-constructor TyaOneToOneRelationship<TMasterObject, TLinkedObject>.Create(const MasterObject: TMasterObject;
-                                                                         const MasterObjectLinkedKeys: TStringArray;
-                                                                         const MasterORM: IyaORM<TMasterObject>;
-                                                                         const LinkedORM: IyaORM<TLinkedObject>);
+constructor TyaOneToOneRelationship<TMasterObject, TLinkedObject>.Create(const AMasterObject: TMasterObject;
+                                                                         const AMasterObjectLinkedKeys: TStringArray;
+                                                                         const AMasterORM: IyaORM<TMasterObject>;
+                                                                         const ALinkedORM: IyaORM<TLinkedObject>);
 begin
-  FMasterObject := MasterObject;
-  FMasterObjectLinkedKeys := MasterObjectLinkedKeys;
-  FMasterORM := MasterORM;
-  FLinkedORM := LinkedORM;
+  FMasterObject := AMasterObject;
+  FMasterObjectLinkedKeys := AMasterObjectLinkedKeys;
+  FMasterORM := AMasterORM;
+  FLinkedORM := ALinkedORM;
   FCheckIsEnabled := true;
   CheckLinkedObject;
 end;
@@ -148,27 +148,27 @@ end;
 
 procedure TyaOneToOneRelationship<TMasterObject, TLinkedObject>.CheckLinkedObject;
 var
-  Key: string;
-  IsNull: boolean;
-  KeyValues: TVariantArray;
+  LKey: string;
+  LIsNull: boolean;
+  LKeyValues: TVariantArray;
 begin
   if not FCheckIsEnabled then
     Exit;
-  IsNull := false;
-  SetLength(KeyValues, Length(FMasterObjectLinkedKeys));
-  for Key in FMasterObjectLinkedKeys do
+  LIsNull := false;
+  SetLength(LKeyValues, Length(FMasterObjectLinkedKeys));
+  for LKey in FMasterObjectLinkedKeys do
   begin
-    if VariantIsEmptyOrNull(FMasterORM.GetPropertyValue(FMasterObject, Key)) then
-      IsNull := true;
+    if VariantIsEmptyOrNull(FMasterORM.GetPropertyValue(FMasterObject, LKey)) then
+      LIsNull := true;
   end;
 
-  KeyValues := FMasterORM.GetFieldValues(FMasterObjectLinkedKeys, FMasterObject);
+  LKeyValues := FMasterORM.GetFieldValues(FMasterObjectLinkedKeys, FMasterObject);
 
   FreeAndNil(FLinkedObject);
-  if IsNull then
+  if LIsNull then
     Exit;
 
-  FLinkedORM.Load(KeyValues, FLinkedObject);
+  FLinkedORM.Load(LKeyValues, FLinkedObject);
 end;
 
 function TyaOneToOneRelationship<TMasterObject, TLinkedObject>.GetLinkedObject: TLinkedObject;
@@ -176,16 +176,16 @@ begin
   result := FLinkedObject;
 end;
 
-procedure TyaOneToOneRelationship<TMasterObject, TLinkedObject>.SetLinkedObject(const LinkedObject: TLinkedObject);
+procedure TyaOneToOneRelationship<TMasterObject, TLinkedObject>.SetLinkedObject(const ALinkedObject: TLinkedObject);
 var
-  Index: integer;
+  LIndex: integer;
 begin
   FreeAndNil(FLinkedObject);
-  FLinkedObject := LinkedObject;
+  FLinkedObject := ALinkedObject;
   FCheckIsEnabled := false;
 
-  for Index := Low(FLinkedORM.GetPropertyKeyFields) to High(FLinkedORM.GetPropertyKeyFields) do
-    SetPropValue(FMasterObject, FMasterObjectLinkedKeys[Index], FLinkedORM.GetPropertyValue(FLinkedObject, FLinkedORM.GetPropertyKeyFields[Index]));
+  for LIndex := Low(FLinkedORM.GetPropertyKeyFields) to High(FLinkedORM.GetPropertyKeyFields) do
+    SetPropValue(FMasterObject, FMasterObjectLinkedKeys[LIndex], FLinkedORM.GetPropertyValue(FLinkedObject, FLinkedORM.GetPropertyKeyFields[LIndex]));
 
   FCheckIsEnabled := true;
 end;

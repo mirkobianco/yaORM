@@ -32,49 +32,49 @@ type
     FSQLTransaction: TSQLTransaction;
     FOwnedTransaction: boolean;
   public
-    constructor Create(const FactoryFunc: TFactoryFunc;
-                       const TableName: string;
-                       const PropertyKeyFields: TStringArray;
-                       const SQLConnection: TSQLConnection;
-                       const SQLTransaction: TSQLTransaction = nil;
-                       const FieldToPropertyMap: TDictionary<string, string> = nil;
-                       const FieldToPropertyConversionFunc: TConversionFunc = nil;
-                       const PropertytoFieldConversionFunc: TConversionFunc = nil); reintroduce;
+    constructor Create(const AFactoryFunc: TFactoryFunc;
+                       const ATableName: string;
+                       const APropertyKeyFields: TStringArray;
+                       const ASQLConnection: TSQLConnection;
+                       const ASQLTransaction: TSQLTransaction = nil;
+                       const AFieldToPropertyMap: TDictionary<string, string> = nil;
+                       const AFieldToPropertyConversionFunc: TConversionFunc = nil;
+                       const APropertytoFieldConversionFunc: TConversionFunc = nil); reintroduce;
     destructor Destroy; override;
 
     //IyaORM
-    function Load(const KeyValues: TVariantArray; out Instance: T): boolean; override;
-    function LoadList(const SQL: string; out List: TObjectList<T>): boolean; overload; override;
-    function LoadList(const Filter: IyaFilter; out List: TObjectList<T>): boolean; overload; override;
-    function LoadList(const KeyValues: TVariantArray; out List: TObjectList<T>): boolean; overload; override;
-    procedure Insert(const Instance: T); override;
-    procedure Update(const Instance: T); override;
-    procedure Delete(const Instance: T); overload; override;
-    procedure Delete(const KeyValues: TVariantArray); overload; override;
-    procedure Delete(const Filter: IyaFilter); overload; override;
+    function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean; override;
+    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload; override;
+    function LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean; overload; override;
+    function LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean; overload; override;
+    procedure Insert(const AInstance: T); override;
+    procedure Update(const AInstance: T); override;
+    procedure Delete(const AInstance: T); overload; override;
+    procedure Delete(const AKeyValues: TVariantArray); overload; override;
+    procedure Delete(const AFilter: IyaFilter); overload; override;
   end;
 
 implementation
 
 { TyaSQLIyaORM }
 
-constructor TyaSQLORM<T>.Create(const FactoryFunc: TFactoryFunc;
-                                const TableName: string;
-                                const PropertyKeyFields: TStringArray;
-                                const SQLConnection: TSQLConnection;
-                                const SQLTransaction: TSQLTransaction;
-                                const FieldToPropertyMap: TDictionary<string, string>;
-                                const FieldToPropertyConversionFunc: TConversionFunc;
-                                const PropertytoFieldConversionFunc: TConversionFunc);
+constructor TyaSQLORM<T>.Create(const AFactoryFunc: TFactoryFunc;
+                                const ATableName: string;
+                                const APropertyKeyFields: TStringArray;
+                                const ASQLConnection: TSQLConnection;
+                                const ASQLTransaction: TSQLTransaction;
+                                const AFieldToPropertyMap: TDictionary<string, string>;
+                                const AFieldToPropertyConversionFunc: TConversionFunc;
+                                const APropertytoFieldConversionFunc: TConversionFunc);
 begin
-  inherited Create(FactoryFunc, TableName, PropertyKeyFields, FieldToPropertyMap, FieldToPropertyConversionFunc, PropertytoFieldConversionFunc);
-  FSQLConnection := SQLConnection;
-  FSQLTransaction := SQLTransaction;
+  inherited Create(AFactoryFunc, ATableName, APropertyKeyFields, AFieldToPropertyMap, AFieldToPropertyConversionFunc, APropertytoFieldConversionFunc);
+  FSQLConnection := ASQLConnection;
+  FSQLTransaction := ASQLTransaction;
   FOwnedTransaction := false;
   if not Assigned(FSQLTransaction) then
   begin
     FSQLTransaction := TSQLTransaction.Create(nil);
-    FSQLTransaction.SQLConnection := SQLConnection;
+    FSQLTransaction.SQLConnection := ASQLConnection;
     FOwnedTransaction := true;
   end;
 end;
@@ -86,93 +86,93 @@ begin
   inherited Destroy;
 end;
 
-function TyaSQLORM<T>.Load(const KeyValues: TVariantArray; out Instance: T): boolean;
+function TyaSQLORM<T>.Load(const AKeyValues: TVariantArray; out OInstance: T): boolean;
 var
-  Query: TSQLQuery;
+  LQuery: TSQLQuery;
 begin
   inherited;
   result := false;
-  Query := TSQLQuery.Create(nil);
+  LQuery := TSQLQuery.Create(nil);
   try
-    Query.SQLConnection := FSQLConnection;
-    Query.Transaction := FSQLTransaction;
+    LQuery.SQLConnection := FSQLConnection;
+    LQuery.Transaction := FSQLTransaction;
     try
-      Instance := New;
+      OInstance := New;
 
-      CreateSelectSQL(Instance, Query.SQL);
-      AddKeyValuesConditions(KeyValues, Query.SQL, Query.Params);
-      Query.Open;
+      CreateSelectSQL(OInstance, LQuery.SQL);
+      AddKeyValuesConditions(AKeyValues, LQuery.SQL, LQuery.Params);
+      LQuery.Open;
 
-      result := not Query.IsEmpty;
+      result := not LQuery.IsEmpty;
       if not result then
         Exit;
 
-      CopyFieldsToInstance(Query.Fields, Instance);
+      CopyFieldsToInstance(LQuery.Fields, OInstance);
     except
       on E: Exception do
       begin
-        FreeAndNil(Instance);
+        FreeAndNil(OInstance);
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Load: %s', [E.Message]);
       end;
     end;
   finally
-    FreeAndNil(Query);
+    FreeAndNil(LQuery);
   end;
 end;
 
-function TyaSQLORM<T>.LoadList(const SQL: string; out List: TObjectList<T>): boolean;
+function TyaSQLORM<T>.LoadList(const ASQL: string; out OList: TObjectList<T>): boolean;
 var
-  Query: TSQLQuery;
+  LQuery: TSQLQuery;
 begin
   result := false;
-  List := nil;
-  Query := TSQLQuery.Create(nil);
+  OList := nil;
+  LQuery := TSQLQuery.Create(nil);
   try
-    Query.SQLConnection := FSQLConnection;
-    Query.Transaction := FSQLTransaction;
+    LQuery.SQLConnection := FSQLConnection;
+    LQuery.Transaction := FSQLTransaction;
     try
-      Query.SQL.Add(SQL);
-      Query.Open;
+      LQuery.SQL.Add(ASQL);
+      LQuery.Open;
 
-      result := not Query.IsEmpty;
+      result := not LQuery.IsEmpty;
       if not result then
         Exit;
 
-      GetObjects(Query, List);
+      GetObjects(LQuery, OList);
     except
       on E: Exception do
       begin
-        FreeAndNil(List);
+        FreeAndNil(OList);
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Load: %s', [E.Message]);
       end;
     end;
   finally
-    FreeAndNil(Query);
+    FreeAndNil(LQuery);
   end;
 end;
 
-function TyaSQLORM<T>.LoadList(const Filter: IyaFilter; out List: TObjectList<T>): boolean;
+function TyaSQLORM<T>.LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean;
 var
-  Query: TSQLQuery;
-  Instance: T;
+  LQuery: TSQLQuery;
+  LInstance: T;
 begin
   result := false;
-  List := nil;
-  Query := TSQLQuery.Create(nil);
-  Instance := New;
+  OList := nil;
+  LQuery := TSQLQuery.Create(nil);
+  LInstance := New;
   try
-    Query.SQLConnection := FSQLConnection;
-    Query.Transaction := FSQLTransaction;
+    LQuery.SQLConnection := FSQLConnection;
+    LQuery.Transaction := FSQLTransaction;
     try
-      CreateSelectSQL(Instance, Query.SQL);
-      AddFilterConditions(Filter, Query.SQL, Query.Params);
-      Query.Open;
+      CreateSelectSQL(LInstance, LQuery.SQL);
+      AddFilterConditions(AFilter, LQuery.SQL, LQuery.Params);
+      LQuery.Open;
 
-      result := not Query.IsEmpty;
+      result := not LQuery.IsEmpty;
       if not result then
         Exit;
 
-      GetObjects(Query, List);
+      GetObjects(LQuery, OList);
     except
       on E: Exception do
       begin
@@ -180,228 +180,228 @@ begin
       end;
     end;
   finally
-    FreeAndNil(Query);
-    FreeAndNil(Instance);
+    FreeAndNil(LQuery);
+    FreeAndNil(LInstance);
   end;
 end;
 
-function TyaSQLORM<T>.LoadList(const KeyValues: TVariantArray; out List: TObjectList<T>): boolean;
+function TyaSQLORM<T>.LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean;
 var
-  Query: TSQLQuery;
-  Instance: T;
+  LQuery: TSQLQuery;
+  LInstance: T;
 begin
   result := false;
-  List := nil;
-  Query := TSQLQuery.Create(nil);
+  OList := nil;
+  LQuery := TSQLQuery.Create(nil);
   try
-    Query.SQLConnection := FSQLConnection;
-    Query.Transaction := FSQLTransaction;
+    LQuery.SQLConnection := FSQLConnection;
+    LQuery.Transaction := FSQLTransaction;
     try
-      Instance := New;
+      LInstance := New;
 
-      CreateSelectSQL(Instance, Query.SQL);
-      AddKeyValuesConditions(KeyValues, Query.SQL, Query.Params);
-      Query.Open;
+      CreateSelectSQL(LInstance, LQuery.SQL);
+      AddKeyValuesConditions(AKeyValues, LQuery.SQL, LQuery.Params);
+      LQuery.Open;
 
-      result := not Query.IsEmpty;
+      result := not LQuery.IsEmpty;
       if not result then
         Exit;
 
-      GetObjects(Query, List);
+      GetObjects(LQuery, OList);
     except
       on E: Exception do
       begin
-        FreeAndNil(List);
-        FreeAndNil(Instance);
+        FreeAndNil(OList);
+        FreeAndNil(LInstance);
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Load: %s', [E.Message]);
       end;
     end;
   finally
-    FreeAndNil(Query);
+    FreeAndNil(LQuery);
   end;
 end;
 
-procedure TyaSQLORM<T>.Insert(const Instance: T);
+procedure TyaSQLORM<T>.Insert(const AInstance: T);
 var
-  Query: TSQLQuery;
-  ManageTransactions: boolean;
+  LQuery: TSQLQuery;
+  LManageTransactions: boolean;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaSQLORM<T>.Insert: Instance not assigned.');
 
-  ManageTransactions := not FSQLTransaction.Active;
+  LManageTransactions := not FSQLTransaction.Active;
 
-  Query := TSQLQuery.Create(nil);
+  LQuery := TSQLQuery.Create(nil);
   try
-    Query.SQLConnection := FSQLConnection;
-    Query.Transaction := FSQLTransaction;
+    LQuery.SQLConnection := FSQLConnection;
+    LQuery.Transaction := FSQLTransaction;
     try
-      if ManageTransactions then
+      if LManageTransactions then
         FSQLTransaction.StartTransaction;;
 
-      CreateInsertSQL(Instance, Query.SQL);
-      CopyInstanceToParams(Instance, Query.Params);
-      Query.ExecSQL;
+      CreateInsertSQL(AInstance, LQuery.SQL);
+      CopyInstanceToParams(AInstance, LQuery.Params);
+      LQuery.ExecSQL;
 
-      if ManageTransactions then
+      if LManageTransactions then
         FSQLTransaction.Commit;
     except
       on E: Exception do
       begin
-        if ManageTransactions then
+        if LManageTransactions then
           FSQLTransaction.Rollback;
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Insert: %s', [E.Message]);
       end;
     end;
   finally
-    FreeAndNil(Query);
+    FreeAndNil(LQuery);
   end;
 end;
 
-procedure TyaSQLORM<T>.Update(const Instance: T);
+procedure TyaSQLORM<T>.Update(const AInstance: T);
 var
-  Query: TSQLQuery;
-  ManageTransactions: boolean;
+  LQuery: TSQLQuery;
+  LManageTransactions: boolean;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaSQLORM<T>.Update: Instance not assigned.');
 
-  ManageTransactions := not FSQLTransaction.Active;
+  LManageTransactions := not FSQLTransaction.Active;
 
-  Query := TSQLQuery.Create(nil);
+  LQuery := TSQLQuery.Create(nil);
   try
-    Query.SQLConnection := FSQLConnection;
-    Query.Transaction := FSQLTransaction;
+    LQuery.SQLConnection := FSQLConnection;
+    LQuery.Transaction := FSQLTransaction;
     try
-      if ManageTransactions then
+      if LManageTransactions then
         FSQLTransaction.StartTransaction;;
 
-      CreateUpdateSQL(Instance, Query.SQL);
-      CopyInstanceToParams(Instance, Query.Params);
+      CreateUpdateSQL(AInstance, LQuery.SQL);
+      CopyInstanceToParams(AInstance, LQuery.Params);
 
-      Query.ExecSQL;
+      LQuery.ExecSQL;
 
-      if ManageTransactions then
+      if LManageTransactions then
         FSQLTransaction.Commit;
     except
       on E: Exception do
       begin
-        if ManageTransactions then
+        if LManageTransactions then
           FSQLTransaction.Rollback;
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Update: %s', [E.Message]);
       end;
     end;
   finally
-    FreeAndNil(Query);
+    FreeAndNil(LQuery);
   end;
 end;
 
-procedure TyaSQLORM<T>.Delete(const Instance: T);
+procedure TyaSQLORM<T>.Delete(const AInstance: T);
 var
-  Query: TSQLQuery;
-  ManageTransactions: boolean;
-  KeyValues: TVariantArray;
+  LQuery: TSQLQuery;
+  LManageTransactions: boolean;
+  LKeyValues: TVariantArray;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaSQLORM<T>.Delete: Instance not assigned.');
 
-  ManageTransactions := not FSQLTransaction.Active;
+  LManageTransactions := not FSQLTransaction.Active;
 
-  Query := TSQLQuery.Create(nil);
+  LQuery := TSQLQuery.Create(nil);
   try
-    Query.SQLConnection := FSQLConnection;
-    Query.Transaction := FSQLTransaction;
+    LQuery.SQLConnection := FSQLConnection;
+    LQuery.Transaction := FSQLTransaction;
     try
-      if ManageTransactions then
+      if LManageTransactions then
         FSQLTransaction.StartTransaction;
 
-      KeyValues := GetKeyValues(Instance);
-      CreateDeleteSQL(Query.SQL);
-      AddKeyValuesConditions(KeyValues, Query.SQL, Query.Params);
-      Query.ExecSQL;
+      LKeyValues := GetKeyValues(AInstance);
+      CreateDeleteSQL(LQuery.SQL);
+      AddKeyValuesConditions(LKeyValues, LQuery.SQL, LQuery.Params);
+      LQuery.ExecSQL;
 
-      if ManageTransactions then
+      if LManageTransactions then
         FSQLTransaction.Commit;
     except
       on E: Exception do
       begin
-        if ManageTransactions then
+        if LManageTransactions then
           FSQLTransaction.Rollback;
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Delete: %s', [E.Message]);
       end;
     end;
   finally
-    FreeAndNil(Query);
+    FreeAndNil(LQuery);
   end;
 end;
 
-procedure TyaSQLORM<T>.Delete(const KeyValues: TVariantArray);
+procedure TyaSQLORM<T>.Delete(const AKeyValues: TVariantArray);
 var
-  ManageTransactions: boolean;
-  Query: TSQLQuery;
+  LManageTransactions: boolean;
+  LQuery: TSQLQuery;
 begin
   inherited;
-  ManageTransactions := not FSQLTransaction.Active;
+  LManageTransactions := not FSQLTransaction.Active;
 
-  Query := TSQLQuery.Create(nil);
+  LQuery := TSQLQuery.Create(nil);
   try
-    Query.SQLConnection := FSQLConnection;
-    Query.Transaction := FSQLTransaction;
+    LQuery.SQLConnection := FSQLConnection;
+    LQuery.Transaction := FSQLTransaction;
     try
-      if ManageTransactions then
+      if LManageTransactions then
         FSQLTransaction.StartTransaction;
 
-      CreateDeleteSQL(Query.SQL);
-      AddKeyValuesConditions(KeyValues, Query.SQL, Query.Params);
-      Query.ExecSQL;
+      CreateDeleteSQL(LQuery.SQL);
+      AddKeyValuesConditions(AKeyValues, LQuery.SQL, LQuery.Params);
+      LQuery.ExecSQL;
 
-      if ManageTransactions then
+      if LManageTransactions then
         FSQLTransaction.Commit;
 
     except
       on E: Exception do
       begin
-        if ManageTransactions then
+        if LManageTransactions then
           FSQLTransaction.Rollback;
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Delete: %s', [E.Message]);
       end;
     end;
   finally
-    FreeAndNil(Query);
+    FreeAndNil(LQuery);
   end;
 end;
 
-procedure TyaSQLORM<T>.Delete(const Filter: IyaFilter);
+procedure TyaSQLORM<T>.Delete(const AFilter: IyaFilter);
 var
-  Query: TSQLQuery;
-  ManageTransactions: boolean;
+  LQuery: TSQLQuery;
+  LManageTransactions: boolean;
 begin
-  ManageTransactions := not FSQLTransaction.Active;
+  LManageTransactions := not FSQLTransaction.Active;
 
-  Query := TSQLQuery.Create(nil);
+  LQuery := TSQLQuery.Create(nil);
   try
-    Query.SQLConnection := FSQLConnection;
-    Query.Transaction := FSQLTransaction;
+    LQuery.SQLConnection := FSQLConnection;
+    LQuery.Transaction := FSQLTransaction;
     try
-      if ManageTransactions then
+      if LManageTransactions then
         FSQLTransaction.StartTransaction;
 
-      CreateDeleteSQL(Query.SQL);
-      AddFilterConditions(Filter, Query.SQL, Query.Params);
-      Query.ExecSQL;
+      CreateDeleteSQL(LQuery.SQL);
+      AddFilterConditions(AFilter, LQuery.SQL, LQuery.Params);
+      LQuery.ExecSQL;
 
-      if ManageTransactions then
+      if LManageTransactions then
         FSQLTransaction.Commit;
     except
       on E: Exception do
       begin
-        if ManageTransactions then
+        if LManageTransactions then
           FSQLTransaction.Rollback;
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Delete: %s', [E.Message]);
       end;
     end;
   finally
-    FreeAndNil(Query);
+    FreeAndNil(LQuery);
   end;
 end;
 

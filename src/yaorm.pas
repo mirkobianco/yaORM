@@ -28,7 +28,7 @@ type
   IyaFilter = interface(IInterface)
     ['{6A7913DF-AE1A-E611-9BDD-080027BF4002}']
     procedure Clear;
-    procedure AddCondition(const PropertyName: string; const FilterType: TFilterType; const Value: variant);
+    procedure AddCondition(const APropertyName: string; const AFilterType: TFilterType; const AValue: variant);
     procedure AddAnd;
     procedure AddOr;
     procedure AddNot;
@@ -36,37 +36,37 @@ type
     procedure AddClosedBracket;
 
     function AsString: string;
-    procedure SetQueryParams(const Params: TParams);
+    procedure SetQueryParams(const AParams: TParams);
   end;
 
   { IyaORM }
 
   IyaORM<T: TObject> = interface(IInterface)
     ['{E88D8D4D-B71E-E611-9290-080027BF4002}']
-    function GetObject(const Fields: TFields): T;
-    procedure GetObjects(const Dataset: TDataset; out List: TObjectList<T>);
-    procedure SetObjects(const List: TObjectList<T>; const Dataset: TDataset);
-    procedure SetObject(const Instance: T; const Dataset: TDataset);
+    function GetObject(const AFields: TFields): T;
+    procedure GetObjects(const ADataset: TDataset; out OList: TObjectList<T>);
+    procedure SetObjects(const AList: TObjectList<T>; const ADataset: TDataset);
+    procedure SetObject(const AInstance: T; const ADataset: TDataset);
 
     function New: T;
-    function Clone(const Instance: T): T;
+    function Clone(const AInstance: T): T;
     function NewFilter: IyaFilter;
 
     function GetPropertyKeyFields: TStringArray;
-    function GetFieldName(const PropertyName: string): string;
-    function GetPropertyValue(const Instance: T; const PropertyName: string): variant;
-    function ConvertToFieldValue(const PropertyName: string; const PropertyValue: variant): variant;
-    function GetFieldValues(const FieldNames: TStringArray; const Instance: T): TVariantArray;
+    function GetFieldName(const APropertyName: string): string;
+    function GetPropertyValue(const AInstance: T; const APropertyName: string): variant;
+    function ConvertToFieldValue(const APropertyName: string; const APropertyValue: variant): variant;
+    function GetFieldValues(const AFieldNames: TStringArray; const AInstance: T): TVariantArray;
 
-    function Load(const KeyValues: TVariantArray; out Instance: T): boolean;
-    function LoadList(const SQL: string; out List: TObjectList<T>): boolean; overload;
-    function LoadList(const Filter: IyaFilter; out List: TObjectList<T>): boolean; overload;
-    function LoadList(const KeyValues: TVariantArray; out List: TObjectList<T>): boolean; overload;
-    procedure Insert(const Instance: T);
-    procedure Update(const Instance: T);
-    procedure Delete(const Instance: T); overload;
-    procedure Delete(const KeyValues: TVariantArray); overload;
-    procedure Delete(const Filter: IyaFilter); overload;
+    function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean;
+    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload;
+    function LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean; overload;
+    function LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean; overload;
+    procedure Insert(const AInstance: T);
+    procedure Update(const AInstance: T);
+    procedure Delete(const AInstance: T); overload;
+    procedure Delete(const AKeyValues: TVariantArray); overload;
+    procedure Delete(const AFilter: IyaFilter); overload;
   end;
 
   { TyaFilter }
@@ -77,12 +77,12 @@ type
     FList: TList<TyaFilterCondition>;
     FORMPointer: Pointer;
   public
-    constructor Create(const ORM: IyaORM<T>);
+    constructor Create(const AORM: IyaORM<T>);
     destructor Destroy; override;
 
 //  IyaFilter<T: IyaObject>
     procedure Clear;
-    procedure AddCondition(const PropertyName: string; const FilterType: TFilterType; const Value: variant);
+    procedure AddCondition(const APropertyName: string; const AFilterType: TFilterType; const AValue: variant);
     procedure AddAnd;
     procedure AddOr;
     procedure AddNot;
@@ -90,7 +90,7 @@ type
     procedure AddClosedBracket;
 
     function AsString: string;
-    procedure SetQueryParams(const Params: TParams);
+    procedure SetQueryParams(const AParams: TParams);
   end;
 
   { TyaAbstractORM }
@@ -100,15 +100,15 @@ type
   type
     TFactoryFunc = function: T of object;
   strict private
-    procedure PrepareKeyValuesParams(const KeyValues: TVariantArray; const Params: TParams);
-    procedure PrepareFilterParams(const Filter: IyaFilter; const Params: TParams);
-    procedure CopyInstanceToFields(const Instance: T; const Fields: TFields);
-    function Concat(const StringArray: TStringArray; const Separator: string): string; overload;
-    function Concat(const StringArray: TStringArray; const Separator: string; const Prefix: string): string; overload;
+    procedure PrepareKeyValuesParams(const AKeyValues: TVariantArray; const AParams: TParams);
+    procedure PrepareFilterParams(const AFilter: IyaFilter; const AParams: TParams);
+    procedure CopyInstanceToFields(const AInstance: T; const AFields: TFields);
+    function Concat(const AStringArray: TStringArray; const ASeparator: string): string; overload;
+    function Concat(const AStringArray: TStringArray; const ASeparator: string; const APrefix: string): string; overload;
     function ConvertFieldKeyArrayToFieldKeyStr: string;
-    function GetFieldNames(const Instance: T): TStringArray;
-    function GetPropertyNames(const Instance: T): TStringArray;
-    function HasSameKeys(const Instance: T; const Fields: TFields): boolean;
+    function GetFieldNames(const AInstance: T): TStringArray;
+    function GetPropertyNames(const AInstance: T): TStringArray;
+    function HasSameKeys(const AInstance: T; const AFields: TFields): boolean;
   strict protected
   var
     FFactoryFunc: TFactoryFunc;
@@ -120,101 +120,101 @@ type
     FFieldToPropertyConversionFunc: TConversionFunc;
     FPropertytoFieldConversionFunc: TConversionFunc;
 
-    procedure CopyFieldsToInstance(const Fields: TFields; const Instance: T);
-    procedure CopyInstanceToParams(const Instance: T; const Params: TParams);
-    function GetKeyValues(const Instance: T): TVariantArray;
+    procedure CopyFieldsToInstance(const AFields: TFields; const AInstance: T);
+    procedure CopyInstanceToParams(const AInstance: T; const AParams: TParams);
+    function GetKeyValues(const AInstance: T): TVariantArray;
 
-    procedure CreateSelectSQL(const Instance: T; const SQL: TStrings);
-    procedure CreateInsertSQL(const Instance: T; const SQL: TStrings);
-    procedure CreateUpdateSQL(const Instance: T; const SQL: TStrings);
-    procedure CreateDeleteSQL(const SQL: TStrings);
-    procedure AddKeyValuesConditions(const KeyValues: TVariantArray; const SQL: TStrings; const Params: TParams);
-    procedure AddFilterConditions(const Filter: IyaFilter; const SQL: TStrings; const Params: TParams);
+    procedure CreateSelectSQL(const AInstance: T; const ASQL: TStrings);
+    procedure CreateInsertSQL(const AInstance: T; const ASQL: TStrings);
+    procedure CreateUpdateSQL(const AInstance: T; const ASQL: TStrings);
+    procedure CreateDeleteSQL(const ASQL: TStrings);
+    procedure AddKeyValuesConditions(const AKeyValues: TVariantArray; const ASQL: TStrings; const AParams: TParams);
+    procedure AddFilterConditions(const AFilter: IyaFilter; const ASQL: TStrings; const AParams: TParams);
   public
-    constructor Create(const FactoryFunc: TFactoryFunc;
-                       const TableName: string;
-                       const PropertyKeyFields: TStringArray;
-                       const FieldToPropertyMap: TDictionary<string, string> = nil;
-                       const FieldToPropertyConversionFunc: TConversionFunc = nil;
-                       const PropertytoFieldConversionFunc: TConversionFunc = nil); reintroduce;
+    constructor Create(const AFactoryFunc: TFactoryFunc;
+                       const ATableName: string;
+                       const APropertyKeyFields: TStringArray;
+                       const AFieldToPropertyMap: TDictionary<string, string> = nil;
+                       const AFieldToPropertyConversionFunc: TConversionFunc = nil;
+                       const APropertytoFieldConversionFunc: TConversionFunc = nil); reintroduce;
     destructor Destroy; override;
 
     //IyaORM
-    function GetObject(const Fields: TFields): T;
-    procedure GetObjects(const Dataset: TDataset; out List: TObjectList<T>);
-    procedure SetObjects(const List: TObjectList<T>; const Dataset: TDataset);
-    procedure SetObject(const Instance: T; const Dataset: TDataset);
+    function GetObject(const AFields: TFields): T;
+    procedure GetObjects(const ADataset: TDataset; out OList: TObjectList<T>);
+    procedure SetObjects(const AList: TObjectList<T>; const ADataset: TDataset);
+    procedure SetObject(const AInstance: T; const ADataset: TDataset);
 
     function New: T;
-    function Clone(const Instance: T): T;
+    function Clone(const AInstance: T): T;
     function NewFilter: IyaFilter;
     function GetPropertyKeyFields: TStringArray;
-    function GetFieldName(const PropertyName: string): string;
-    function GetPropertyValue(const Instance: T; const PropertyName: string): variant;
-    procedure SetPropertyValue(const Instance: T; const PropertyName: string; const PropertyValue: variant);
-    function ConvertToFieldValue(const PropertyName: string; const PropertyValue: variant): variant;
-    function ConvertToPropertyValue(const FieldName: string; const FieldValue: variant): variant;
-    function GetFieldValues(const FieldNames: TStringArray; const Instance: T): TVariantArray;
-    function Load(const KeyValues: TVariantArray; out Instance: T): boolean; virtual;
-    function LoadList(const SQL: string; out List: TObjectList<T>): boolean; overload; virtual; abstract;
-    function LoadList(const Filter: IyaFilter; out List: TObjectList<T>): boolean; overload; virtual; abstract;
-    function LoadList(const KeyValues: TVariantArray; out List: TObjectList<T>): boolean; overload; virtual; abstract;
-    procedure Insert(const Instance: T); virtual; abstract;
-    procedure Update(const Instance: T); virtual; abstract;
-    procedure Delete(const Instance: T); overload; virtual; abstract;
-    procedure Delete(const KeyValues: TVariantArray); overload; virtual;
-    procedure Delete(const Filter: IyaFilter); overload; virtual; abstract;
+    function GetFieldName(const APropertyName: string): string;
+    function GetPropertyValue(const AInstance: T; const APropertyName: string): variant;
+    procedure SetPropertyValue(const AInstance: T; const APropertyName: string; const APropertyValue: variant);
+    function ConvertToFieldValue(const APropertyName: string; const APropertyValue: variant): variant;
+    function ConvertToPropertyValue(const AFieldName: string; const AFieldValue: variant): variant;
+    function GetFieldValues(const AFieldNames: TStringArray; const AInstance: T): TVariantArray;
+    function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean; virtual;
+    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload; virtual; abstract;
+    function LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean; overload; virtual; abstract;
+    function LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean; overload; virtual; abstract;
+    procedure Insert(const AInstance: T); virtual; abstract;
+    procedure Update(const AInstance: T); virtual; abstract;
+    procedure Delete(const AInstance: T); overload; virtual; abstract;
+    procedure Delete(const AKeyValues: TVariantArray); overload; virtual;
+    procedure Delete(const AFilter: IyaFilter); overload; virtual; abstract;
   end;
 
 implementation
 
 { yaORM }
 
-function TyaAbstractORM<T>.GetPropertyValue(const Instance: T; const PropertyName: string): variant;
+function TyaAbstractORM<T>.GetPropertyValue(const AInstance: T; const APropertyName: string): variant;
 var
-  PropInfo: PPropInfo;
+  LPropInfo: PPropInfo;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.GetPropertyValue: Instance not assigned.');
   result := null;
-  PropInfo := GetPropInfo(PTypeInfo(Instance.ClassInfo), PropertyName);
-  if assigned(PropInfo) then
-    result := GetPropValue(Instance, PropInfo);
+  LPropInfo := GetPropInfo(PTypeInfo(AInstance.ClassInfo), APropertyName);
+  if assigned(LPropInfo) then
+    result := GetPropValue(AInstance, LPropInfo);
 end;
 
-procedure TyaAbstractORM<T>.SetPropertyValue(const Instance: T; const PropertyName: string; const PropertyValue: variant);
+procedure TyaAbstractORM<T>.SetPropertyValue(const AInstance: T; const APropertyName: string; const APropertyValue: variant);
 var
-  PropInfo: PPropInfo;
+  LPropInfo: PPropInfo;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.SetPropertyValue: Instance not assigned.');
-  PropInfo := GetPropInfo(PTypeInfo(Instance.ClassInfo), PropertyName);
-  if assigned(PropInfo) then
-    SetPropValue(Instance, PropInfo, PropertyValue);
+  LPropInfo := GetPropInfo(PTypeInfo(AInstance.ClassInfo), APropertyName);
+  if assigned(LPropInfo) then
+    SetPropValue(AInstance, LPropInfo, APropertyValue);
 end;
 
-constructor TyaAbstractORM<T>.Create(const FactoryFunc: TFactoryFunc;
-                                     const TableName: string;
-                                     const PropertyKeyFields: TStringArray;
-                                     const FieldToPropertyMap: TDictionary<string, string>;
-                                     const FieldToPropertyConversionFunc: TConversionFunc;
-                                     const PropertytoFieldConversionFunc: TConversionFunc);
+constructor TyaAbstractORM<T>.Create(const AFactoryFunc: TFactoryFunc;
+                                     const ATableName: string;
+                                     const APropertyKeyFields: TStringArray;
+                                     const AFieldToPropertyMap: TDictionary<string, string>;
+                                     const AFieldToPropertyConversionFunc: TConversionFunc;
+                                     const APropertytoFieldConversionFunc: TConversionFunc);
 var
-  Index: integer;
+  LIndex: integer;
 begin
   inherited Create;
-  FFactoryFunc := FactoryFunc;
-  FTableName := TableName;
-  FPropertyKeyFields := PropertyKeyFields;
-  FFieldToPropertyMap := FieldToPropertyMap;
+  FFactoryFunc := AFactoryFunc;
+  FTableName := ATableName;
+  FPropertyKeyFields := APropertyKeyFields;
+  FFieldToPropertyMap := AFieldToPropertyMap;
   if not Assigned(FFieldToPropertyMap) then
     FFieldToPropertyMap := TDictionary<string, string>.Create;
-  FFieldToPropertyConversionFunc := FieldToPropertyConversionFunc;
-  FPropertytoFieldConversionFunc := PropertytoFieldConversionFunc;
+  FFieldToPropertyConversionFunc := AFieldToPropertyConversionFunc;
+  FPropertytoFieldConversionFunc := APropertytoFieldConversionFunc;
 
   SetLength(FFieldKeyFields, Length(FPropertyKeyFields));
-  for Index := Low(FFieldKeyFields) to High(FFieldKeyFields) do
-    FFieldKeyFields[Index] := GetFieldName(FPropertyKeyFields[Index]);
+  for LIndex := Low(FFieldKeyFields) to High(FFieldKeyFields) do
+    FFieldKeyFields[LIndex] := GetFieldName(FPropertyKeyFields[LIndex]);
 
 end;
 
@@ -224,360 +224,360 @@ begin
   inherited Destroy;
 end;
 
-procedure TyaAbstractORM<T>.CopyFieldsToInstance(const Fields: TFields; const Instance: T);
+procedure TyaAbstractORM<T>.CopyFieldsToInstance(const AFields: TFields; const AInstance: T);
 var
-  Index: integer;
-  Field: TField;
-  PropInfo: PPropInfo;
-  PropertyName: string;
+  LIndex: integer;
+  LField: TField;
+  LPropInfo: PPropInfo;
+  LPropertyName: string;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CopyFieldsToInstance: Instance not assigned.');
-  if not Assigned(Fields) then
+  if not Assigned(AFields) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CopyFieldsToInstance: Fields not assigned.');
 
-  for Index := 0 to Fields.Count - 1 do
+  for LIndex := 0 to AFields.Count - 1 do
   begin
-    Field := Fields[Index];
+    LField := AFields[LIndex];
 
-    PropertyName := '';
-    if not FFieldToPropertyMap.{$IFDEF FPC}TryGetData{$ELSE}TryGetValue{$ENDIF}(Field.FieldName, PropertyName) or PropertyName.IsEmpty then
-      PropertyName := Field.FieldName;
+    LPropertyName := '';
+    if not FFieldToPropertyMap.{$IFDEF FPC}TryGetData{$ELSE}TryGetValue{$ENDIF}(LField.FieldName, LPropertyName) or LPropertyName.IsEmpty then
+      LPropertyName := LField.FieldName;
 
-    PropInfo := GetPropInfo(PTypeInfo(Instance.ClassInfo), PropertyName);
-    if assigned(PropInfo) then
-      SetPropValue(Instance, PropertyName, ConvertToPropertyValue(Field.FieldName, Field.Value));
+    LPropInfo := GetPropInfo(PTypeInfo(AInstance.ClassInfo), LPropertyName);
+    if assigned(LPropInfo) then
+      SetPropValue(AInstance, LPropertyName, ConvertToPropertyValue(LField.FieldName, LField.Value));
   end;
 end;
 
-procedure TyaAbstractORM<T>.CopyInstanceToFields(const Instance: T; const Fields: TFields);
+procedure TyaAbstractORM<T>.CopyInstanceToFields(const AInstance: T; const AFields: TFields);
 var
-  Index: integer;
-  Field: TField;
-  PropertyName: string;
+  LIndex: integer;
+  LField: TField;
+  LPropertyName: string;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CopyInstanceToFields: Instance not assigned.');
-  if not Assigned(Fields) then
+  if not Assigned(AFields) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CopyInstanceToFields: Fields not assigned.');
 
-  for Index := 0 to Fields.Count - 1 do
+  for LIndex := 0 to AFields.Count - 1 do
   begin
-    Field := Fields[Index];
+    LField := AFields[LIndex];
 
-    PropertyName := '';
-    if not FFieldToPropertyMap.{$IFDEF FPC}TryGetData{$ELSE}TryGetValue{$ENDIF}(Field.FieldName, PropertyName) or PropertyName.IsEmpty then
-      PropertyName := Field.FieldName;
+    LPropertyName := '';
+    if not FFieldToPropertyMap.{$IFDEF FPC}TryGetData{$ELSE}TryGetValue{$ENDIF}(LField.FieldName, LPropertyName) or LPropertyName.IsEmpty then
+      LPropertyName := LField.FieldName;
 
-    Field.Value := ConvertToFieldValue(PropertyName, GetPropertyValue(Instance, PropertyName));
+    LField.Value := ConvertToFieldValue(LPropertyName, GetPropertyValue(AInstance, LPropertyName));
   end;
 end;
 
-procedure TyaAbstractORM<T>.CopyInstanceToParams(const Instance: T; const Params: TParams);
+procedure TyaAbstractORM<T>.CopyInstanceToParams(const AInstance: T; const AParams: TParams);
 var
-  Index: integer;
-  Param: TParam;
-  PropertyName: string;
+  LIndex: integer;
+  LParam: TParam;
+  LPropertyName: string;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CopyInstanceToParams: Instance not assigned.');
-  if not Assigned(Params) then
+  if not Assigned(AParams) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CopyInstanceToParams: Params not assigned.');
 
-  for Index := 0 to Params.Count - 1 do
+  for LIndex := 0 to AParams.Count - 1 do
   begin
-    Param := Params[Index];
+    LParam := AParams[LIndex];
 
-    PropertyName := '';
-    if not FFieldToPropertyMap.{$IFDEF FPC}TryGetData{$ELSE}TryGetValue{$ENDIF}(Param.Name, PropertyName) or PropertyName.IsEmpty then
-      PropertyName := Param.Name;
+    LPropertyName := '';
+    if not FFieldToPropertyMap.{$IFDEF FPC}TryGetData{$ELSE}TryGetValue{$ENDIF}(LParam.Name, LPropertyName) or LPropertyName.IsEmpty then
+      LPropertyName := LParam.Name;
 
-    Param.Value := ConvertToFieldValue(PropertyName, GetPropertyValue(Instance, PropertyName));
+    LParam.Value := ConvertToFieldValue(LPropertyName, GetPropertyValue(AInstance, LPropertyName));
   end;
 end;
 
-function TyaAbstractORM<T>.GetFieldNames(const Instance: T): TStringArray;
+function TyaAbstractORM<T>.GetFieldNames(const AInstance: T): TStringArray;
 var
-  PT: PTypeData;
-  Count,
+  LPT: PTypeData;
+  LCount,
 {$IFDEF FPC}
-  DataIndex,
+  LDataIndex,
 {$ENDIF}
-  Index: integer;
+  LIndex: integer;
 {$IFNDEF FPC}
-  Key,
+  LKey,
 {$ENDIF}
-  PropertyName,
-  FieldName: string;
-  PP: PPropList;
+  LPropertyName,
+  LFieldName: string;
+  LPP: PPropList;
 begin
   SetLength(result, 0);
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.GetFieldNames: Instance not assigned.');
 
-  PT := GetTypeData(Instance.ClassInfo);
-  Count := PT^.PropCount;
-  SetLength(result, Count);
-  GetMem (PP, Count * SizeOf(Pointer));
-  GetPropInfos(Instance.ClassInfo, PP);
-  for Index := 0 to Count - 1 do
+  LPT := GetTypeData(AInstance.ClassInfo);
+  LCount := LPT^.PropCount;
+  SetLength(result, LCount);
+  GetMem (LPP, LCount * SizeOf(Pointer));
+  GetPropInfos(AInstance.ClassInfo, LPP);
+  for LIndex := 0 to LCount - 1 do
   begin
-    PropertyName := PP^[Index]^.Name;
-    FieldName := PropertyName;
+    LPropertyName := LPP^[LIndex]^.Name;
+    LFieldName := LPropertyName;
 {$IFDEF FPC}
-    DataIndex := FFieldToPropertyMap.IndexOfData(PropertyName);
-    if DataIndex <> -1 then
-      FieldName := FFieldToPropertyMap.Keys[DataIndex];
+    LDataIndex := FFieldToPropertyMap.IndexOfData(LPropertyName);
+    if LDataIndex <> -1 then
+      LFieldName := FFieldToPropertyMap.Keys[LDataIndex];
 {$ELSE}
-    for Key in FFieldToPropertyMap.Keys do
-      if UpperCase(FFieldToPropertyMap.Items[Key]) = UpperCase(PropertyName) then
-        FieldName := Key;
+    for LKey in FFieldToPropertyMap.Keys do
+      if UpperCase(FFieldToPropertyMap.Items[LKey]) = UpperCase(APropertyName) then
+        FieldName := LKey;
 {$ENDIF}
-    result[Index] := FieldName;
+    result[LIndex] := LFieldName;
   end;
-  FreeMem(PP);
+  FreeMem(LPP);
 end;
 
-function TyaAbstractORM<T>.GetPropertyNames(const Instance: T): TStringArray;
+function TyaAbstractORM<T>.GetPropertyNames(const AInstance: T): TStringArray;
 var
-  PT: PTypeData;
-  Count,
-  Index: integer;
-  PP: PPropList;
+  LPT: PTypeData;
+  LCount,
+  LIndex: integer;
+  LPP: PPropList;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.GetPropertyNames: Instance not assigned.');
 
-  PT := GetTypeData(Instance.ClassInfo);
-  Count := PT^.PropCount;
-  SetLength(result, Count);
-  GetMem (PP, Count * SizeOf(Pointer));
-  GetPropInfos(Instance.ClassInfo, PP);
-  for Index := 0 to Count - 1 do
-    result[Index] := PP^[Index]^.Name;
-  FreeMem(PP);
+  LPT := GetTypeData(AInstance.ClassInfo);
+  LCount := LPT^.PropCount;
+  SetLength(result, LCount);
+  GetMem (LPP, LCount * SizeOf(Pointer));
+  GetPropInfos(AInstance.ClassInfo, LPP);
+  for LIndex := 0 to LCount - 1 do
+    result[LIndex] := LPP^[LIndex]^.Name;
+  FreeMem(LPP);
 end;
 
-function TyaAbstractORM<T>.GetFieldName(const PropertyName: string): string;
+function TyaAbstractORM<T>.GetFieldName(const APropertyName: string): string;
 var
 {$IFDEF FPC}
-  DataIndex: integer;
+  LDataIndex: integer;
 {$ELSE}
-  Key: string;
+  LKey: string;
 {$ENDIF}
 begin
-  result := PropertyName;
+  result := APropertyName;
   if not Assigned(FFieldToPropertyMap) then
     Exit;
 {$IFDEF FPC}
-  DataIndex := FFieldToPropertyMap.IndexOfData(PropertyName);
-  if DataIndex <> -1 then
-    result := FFieldToPropertyMap.Keys[DataIndex];
+  LDataIndex := FFieldToPropertyMap.IndexOfData(APropertyName);
+  if LDataIndex <> -1 then
+    result := FFieldToPropertyMap.Keys[LDataIndex];
 {$ELSE}
-  for Key in FFieldToPropertyMap.Keys do
-    if UpperCase(FFieldToPropertyMap.Items[Key]) = UpperCase(PropertyName) then
-      FieldName := Key;
+  for LKey in FFieldToPropertyMap.Keys do
+    if UpperCase(FFieldToPropertyMap.Items[LKey]) = UpperCase(APropertyName) then
+      FieldName := LKey;
 {$ENDIF}
 end;
 
-function TyaAbstractORM<T>.ConvertToFieldValue(const PropertyName: string; const PropertyValue: variant): variant;
+function TyaAbstractORM<T>.ConvertToFieldValue(const APropertyName: string; const APropertyValue: variant): variant;
 begin
-  result := PropertyValue;
+  result := APropertyValue;
   if Assigned(FPropertytoFieldConversionFunc) then
-    result := FPropertytoFieldConversionFunc(PropertyName, PropertyValue);
+    result := FPropertytoFieldConversionFunc(APropertyName, APropertyValue);
 end;
 
-function TyaAbstractORM<T>.ConvertToPropertyValue(const FieldName: string; const FieldValue: variant): variant;
+function TyaAbstractORM<T>.ConvertToPropertyValue(const AFieldName: string; const AFieldValue: variant): variant;
 begin
-  result := FieldValue;
+  result := AFieldValue;
   if Assigned(FFieldToPropertyConversionFunc) then
-    result := FFieldToPropertyConversionFunc(FieldName, FieldValue);
+    result := FFieldToPropertyConversionFunc(AFieldName, AFieldValue);
 end;
 
-function TyaAbstractORM<T>.HasSameKeys(const Instance: T; const Fields: TFields): boolean;
+function TyaAbstractORM<T>.HasSameKeys(const AInstance: T; const AFields: TFields): boolean;
 var
-  KeyIndex: integer;
+  LKeyIndex: integer;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.HasSameKeys: Instance not assigned.');
-  if not Assigned(Fields) then
+  if not Assigned(AFields) then
     raise EyaORMException.Create('TyaAbstractORM<T>.HasSameKeys: Fields not assigned.');
 
   result := true;
-  for KeyIndex := Low(FFieldKeyFields) to High(FFieldKeyFields) do
-    result := result and VarSameValue(Fields.FieldByName(FFieldKeyFields[KeyIndex]).Value, GetPropertyValue(Instance, FPropertyKeyFields[KeyIndex]));
+  for LKeyIndex := Low(FFieldKeyFields) to High(FFieldKeyFields) do
+    result := result and VarSameValue(AFields.FieldByName(FFieldKeyFields[LKeyIndex]).Value, GetPropertyValue(AInstance, FPropertyKeyFields[LKeyIndex]));
 end;
 
-procedure TyaAbstractORM<T>.CreateSelectSQL(const Instance: T; const SQL: TStrings);
+procedure TyaAbstractORM<T>.CreateSelectSQL(const AInstance: T; const ASQL: TStrings);
 var
-  FieldNames: TStringArray;
+  LFieldNames: TStringArray;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CreateSelectSQL: Instance not assigned.');
-  if not Assigned(SQL) then
+  if not Assigned(ASQL) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CreateSelectSQL: SQL not assigned.');
 
-  FieldNames := GetFieldNames(Instance);
+  LFieldNames := GetFieldNames(AInstance);
 
-  SQL.Clear;
-  SQL.Add('SELECT');
-  SQL.Add(Format('%s', [Concat(FieldNames, ',')]));
-  SQL.Add(Format('FROM %s', [FTableName]));
+  ASQL.Clear;
+  ASQL.Add('SELECT');
+  ASQL.Add(Format('%s', [Concat(LFieldNames, ',')]));
+  ASQL.Add(Format('FROM %s', [FTableName]));
 end;
 
-procedure TyaAbstractORM<T>.CreateInsertSQL(const Instance: T; const SQL: TStrings);
+procedure TyaAbstractORM<T>.CreateInsertSQL(const AInstance: T; const ASQL: TStrings);
 var
-  FieldNames: TStringArray;
+  LFieldNames: TStringArray;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CreateInsertSQL: Instance not assigned.');
-  if not Assigned(SQL) then
+  if not Assigned(ASQL) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CreateInsertSQL: SQL not assigned.');
 
-  FieldNames := GetFieldNames(Instance);
-  SQL.Add(Format('INSERT INTO %s', [FTableName]));
-  SQL.Add(Format('(%s)', [Concat(FieldNames, ',')]));
-  SQL.Add('VALUES');
-  SQL.Add(Format('(%s)', [Concat(FieldNames, ',', ':')]));
+  LFieldNames := GetFieldNames(AInstance);
+  ASQL.Add(Format('INSERT INTO %s', [FTableName]));
+  ASQL.Add(Format('(%s)', [Concat(LFieldNames, ',')]));
+  ASQL.Add('VALUES');
+  ASQL.Add(Format('(%s)', [Concat(LFieldNames, ',', ':')]));
 end;
 
-procedure TyaAbstractORM<T>.CreateUpdateSQL(const Instance: T; const SQL: TStrings);
+procedure TyaAbstractORM<T>.CreateUpdateSQL(const AInstance: T; const ASQL: TStrings);
 var
-  FieldNames: TStringArray;
-  Index,
-  KeyIndex: integer;
-  First,
-  Found: boolean;
+  LFieldNames: TStringArray;
+  LIndex,
+  LKeyIndex: integer;
+  LFirst,
+  LFound: boolean;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CreateUpdateSQL: Instance not assigned.');
-  if not Assigned(SQL) then
+  if not Assigned(ASQL) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CreateUpdateSQL: SQL not assigned.');
 
-  FieldNames := GetFieldNames(Instance);
+  LFieldNames := GetFieldNames(AInstance);
 
-  SQL.Add(Format('UPDATE %s', [FTableName]));
-  SQL.Add('SET');
+  ASQL.Add(Format('UPDATE %s', [FTableName]));
+  ASQL.Add('SET');
 
-  First := true;
-  for Index := Low(FieldNames) to High(FieldNames) do
+  LFirst := true;
+  for LIndex := Low(LFieldNames) to High(LFieldNames) do
   begin
-    Found := false;
-    for KeyIndex := Low(FFieldKeyFields) to High(FFieldKeyFields) do
-      if SameText(FFieldKeyFields[KeyIndex], FieldNames[Index]) then
+    LFound := false;
+    for LKeyIndex := Low(FFieldKeyFields) to High(FFieldKeyFields) do
+      if SameText(FFieldKeyFields[LKeyIndex], LFieldNames[LIndex]) then
       begin
-        Found := true;
+        LFound := true;
         Break;
       end;
-    if not Found then
+    if not LFound then
     begin
-      SQL.Add(Format('%s %s =:%s', [IfThen(not First, ','), FieldNames[Index], FieldNames[Index]]));
-      First := false;
+      ASQL.Add(Format('%s %s =:%s', [IfThen(not LFirst, ','), LFieldNames[LIndex], LFieldNames[LIndex]]));
+      LFirst := false;
     end;
   end;
 
   if Length(FFieldKeyFields) > 0 then
   begin
-    SQL.Add('WHERE');
-    for Index := Low(FFieldKeyFields) to High(FFieldKeyFields) do
-      SQL.Add(Format('%s = :%s %s', [FFieldKeyFields[Index], FFieldKeyFields[Index], IfThen(Index < Low(FFieldKeyFields), 'AND')]));
+    ASQL.Add('WHERE');
+    for LIndex := Low(FFieldKeyFields) to High(FFieldKeyFields) do
+      ASQL.Add(Format('%s = :%s %s', [FFieldKeyFields[LIndex], FFieldKeyFields[LIndex], IfThen(LIndex < Low(FFieldKeyFields), 'AND')]));
   end;
 end;
 
-procedure TyaAbstractORM<T>.CreateDeleteSQL(const SQL: TStrings);
+procedure TyaAbstractORM<T>.CreateDeleteSQL(const ASQL: TStrings);
 begin
-  if not Assigned(SQL) then
+  if not Assigned(ASQL) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CreateDeleteSQL: SQL not assigned.');
 
-  SQL.Clear;
-  SQL.Add(Format('DELETE FROM %s', [FTableName]));
+  ASQL.Clear;
+  ASQL.Add(Format('DELETE FROM %s', [FTableName]));
 end;
 
-procedure TyaAbstractORM<T>.AddKeyValuesConditions(const KeyValues: TVariantArray; const SQL: TStrings; const Params: TParams);
+procedure TyaAbstractORM<T>.AddKeyValuesConditions(const AKeyValues: TVariantArray; const ASQL: TStrings; const AParams: TParams);
 var
-  Index: integer;
+  LIndex: integer;
 begin
-  if not Assigned(Params) then
+  if not Assigned(AParams) then
     raise EyaORMException.Create('TyaAbstractORM<T>.AddKeyValuesConditions: Params not assigned.');
-  if not Assigned(SQL) then
+  if not Assigned(ASQL) then
     raise EyaORMException.Create('TyaAbstractORM<T>.AddKeyValuesConditions: SQL not assigned.');
 
-  if Length(KeyValues) > 0 then
+  if Length(AKeyValues) > 0 then
   begin
-    SQL.Add('WHERE');
-    for Index := Low(KeyValues) to High(KeyValues) do
-      SQL.Add(Format('%s = :%s %s', [FFieldKeyFields[Index], FFieldKeyFields[Index], IfThen(Index < Low(FFieldKeyFields), 'AND')]));
+    ASQL.Add('WHERE');
+    for LIndex := Low(AKeyValues) to High(AKeyValues) do
+      ASQL.Add(Format('%s = :%s %s', [FFieldKeyFields[LIndex], FFieldKeyFields[LIndex], IfThen(LIndex < Low(FFieldKeyFields), 'AND')]));
   end;
-  PrepareKeyValuesParams(KeyValues, Params);
+  PrepareKeyValuesParams(AKeyValues, AParams);
 end;
 
-procedure TyaAbstractORM<T>.AddFilterConditions(const Filter: IyaFilter; const SQL: TStrings; const Params: TParams);
+procedure TyaAbstractORM<T>.AddFilterConditions(const AFilter: IyaFilter; const ASQL: TStrings; const AParams: TParams);
 var
-  FilterString: string;
+  LFilterString: string;
 begin
-  if not Assigned(Filter) then
+  if not Assigned(AFilter) then
     Exit;
-  if not Assigned(SQL) then
+  if not Assigned(ASQL) then
     raise EyaORMException.Create('TyaAbstractORM<T>.AddFilterConditions: SQL not assigned.');
-  if not Assigned(Params) then
+  if not Assigned(AParams) then
     raise EyaORMException.Create('TyaAbstractORM<T>.AddFilterConditions: Params not assigned.');
 
-  FilterString := Filter.AsString;
-  if not FilterString.IsEmpty then
-    SQL.Add(Format('WHERE %s', [FilterString]));
+  LFilterString := AFilter.AsString;
+  if not LFilterString.IsEmpty then
+    ASQL.Add(Format('WHERE %s', [LFilterString]));
 
-  PrepareFilterParams(Filter, Params);
+  PrepareFilterParams(AFilter, AParams);
 end;
 
-procedure TyaAbstractORM<T>.PrepareKeyValuesParams(const KeyValues: TVariantArray; const Params: TParams);
+procedure TyaAbstractORM<T>.PrepareKeyValuesParams(const AKeyValues: TVariantArray; const AParams: TParams);
 var
-  Index: integer;
+  LIndex: integer;
 begin
-  if not Assigned(Params) then
+  if not Assigned(AParams) then
     raise EyaORMException.Create('TyaAbstractORM<T>.PrepareKeyValuesParams: Params not assigned.');
 
-  for Index := Low(KeyValues) to High(KeyValues) do
-    Params[Index].Value := KeyValues[Index];
+  for LIndex := Low(AKeyValues) to High(AKeyValues) do
+    AParams[LIndex].Value := AKeyValues[LIndex];
 end;
 
-procedure TyaAbstractORM<T>.PrepareFilterParams(const Filter: IyaFilter; const Params: TParams);
+procedure TyaAbstractORM<T>.PrepareFilterParams(const AFilter: IyaFilter; const AParams: TParams);
 var
-  FilterString: string;
+  LFilterString: string;
 begin
-  if not Assigned(Filter) then
+  if not Assigned(AFilter) then
     Exit;
 
-  if not Assigned(Params) then
+  if not Assigned(AParams) then
     raise EyaORMException.Create('TyaAbstractORM<T>.PrepareFilterParams: Params not assigned.');
 
-  FilterString := Filter.AsString;
-  if not FilterString.IsEmpty then
-    Filter.SetQueryParams(Params);
+  LFilterString := AFilter.AsString;
+  if not LFilterString.IsEmpty then
+    AFilter.SetQueryParams(AParams);
 end;
 
-function TyaAbstractORM<T>.Concat(const StringArray: TStringArray; const Separator: string): string;
+function TyaAbstractORM<T>.Concat(const AStringArray: TStringArray; const ASeparator: string): string;
 var
-  Key: string;
+  LKey: string;
 begin
   result := '';
-  for Key in StringArray do
+  for LKey in AStringArray do
   begin
     if not result.IsEmpty then
-      result := result + Separator;
-    result := result + Key;
+      result := result + ASeparator;
+    result := result + LKey;
   end;
 end;
 
-function TyaAbstractORM<T>.Concat(const StringArray: TStringArray; const Separator: string; const Prefix: string): string;
+function TyaAbstractORM<T>.Concat(const AStringArray: TStringArray; const ASeparator: string; const APrefix: string): string;
 var
-  Key: string;
+  LKey: string;
 begin
   result := '';
-  for Key in StringArray do
+  for LKey in AStringArray do
   begin
     if not result.IsEmpty then
-      result := result + Separator;
-    result := result + Prefix + Key;
+      result := result + ASeparator;
+    result := result + APrefix + LKey;
   end;
 end;
 
@@ -588,79 +588,79 @@ begin
   Exit(FFieldKeyFieldsStr);
 end;
 
-function TyaAbstractORM<T>.GetKeyValues(const Instance: T): TVariantArray;
+function TyaAbstractORM<T>.GetKeyValues(const AInstance: T): TVariantArray;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('yaORM.GetKeyValues: Instance not assigned.');
 
-  result := GetFieldValues(FPropertyKeyFields, Instance);
+  result := GetFieldValues(FPropertyKeyFields, AInstance);
 end;
 
-function TyaAbstractORM<T>.GetObject(const Fields: TFields): T;
+function TyaAbstractORM<T>.GetObject(const AFields: TFields): T;
 begin
-  if not Assigned(Fields) then
+  if not Assigned(AFields) then
     raise EyaORMException.Create('yaORM.GetObject: Fields not assigned.');
 
   result := New;
-  CopyFieldsToInstance(Fields, result);
+  CopyFieldsToInstance(AFields, result);
 end;
 
-procedure TyaAbstractORM<T>.GetObjects(const Dataset: TDataset; out List: TObjectList<T>);
+procedure TyaAbstractORM<T>.GetObjects(const ADataset: TDataset; out OList: TObjectList<T>);
 begin
-  if not Assigned(Dataset) then
+  if not Assigned(ADataset) then
     raise EyaORMException.Create('yaORM.GetObjects: Dataset not assigned.');
 
-  List := TObjectList<T>.Create;
+  OList := TObjectList<T>.Create;
 
-  Dataset.First;
-  while not Dataset.EOF do
+  ADataset.First;
+  while not ADataset.EOF do
   begin
-    List.Add(GetObject(Dataset.Fields));
-    Dataset.Next;
+    OList.Add(GetObject(ADataset.Fields));
+    ADataset.Next;
   end;
 end;
 
-procedure TyaAbstractORM<T>.SetObjects(const List: TObjectList<T>; const Dataset: TDataset);
+procedure TyaAbstractORM<T>.SetObjects(const AList: TObjectList<T>; const ADataset: TDataset);
 var
-  Instance: T;
-  Found: boolean;
+  LInstance: T;
+  LFound: boolean;
 begin
-  if not Assigned(Dataset) then
+  if not Assigned(ADataset) then
     raise EyaORMException.Create('yaORM.SetObjects: Dataset not assigned.');
-  if not Assigned(List) then
+  if not Assigned(AList) then
     raise EyaORMException.Create('yaORM.SetObjects: List not assigned.');
 
-  Dataset.First;
-  while not Dataset.EOF do
+  ADataset.First;
+  while not ADataset.EOF do
   begin
-    Found := false;
-    for Instance in List do
-      Found := Found or HasSameKeys(Instance, Dataset.Fields);
-    if Found then
-      Dataset.Next
+    LFound := false;
+    for LInstance in AList do
+      LFound := LFound or HasSameKeys(LInstance, ADataset.Fields);
+    if LFound then
+      ADataset.Next
     else
-      Dataset.Delete;
+      ADataset.Delete;
   end;
 
-  for Instance in List do
-    SetObject(Instance, Dataset);
+  for LInstance in AList do
+    SetObject(LInstance, ADataset);
 end;
 
-procedure TyaAbstractORM<T>.SetObject(const Instance: T; const Dataset: TDataset);
+procedure TyaAbstractORM<T>.SetObject(const AInstance: T; const ADataset: TDataset);
 begin
-  if not Assigned(Dataset) then
+  if not Assigned(ADataset) then
     raise EyaORMException.Create('yaORM.SetObject: Dataset not assigned.');
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('yaORM.SetObject: Instance not assigned.');
 
-  if DataSet.Locate(ConvertFieldKeyArrayToFieldKeyStr, VarArrayOf(GetKeyValues(Instance)), []) then
-    Dataset.Edit
+  if ADataset.Locate(ConvertFieldKeyArrayToFieldKeyStr, VarArrayOf(GetKeyValues(AInstance)), []) then
+    ADataset.Edit
   else
-    Dataset.Insert;
+    ADataset.Insert;
 
-  CopyInstanceToFields(Instance, Dataset.Fields);
+  CopyInstanceToFields(AInstance, ADataset.Fields);
 
-  Dataset.Post;
+  ADataset.Post;
 end;
 
 function TyaAbstractORM<T>.New: T;
@@ -668,18 +668,18 @@ begin
   result := FFactoryFunc();
 end;
 
-function TyaAbstractORM<T>.Clone(const Instance: T): T;
+function TyaAbstractORM<T>.Clone(const AInstance: T): T;
 var
-  PropertyNames: TStringArray;
-  PropertyName: string;
+  LPropertyNames: TStringArray;
+  LPropertyName: string;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('yaORM.Clone: Instance not assigned.');
 
   result := New;
-  PropertyNames := GetPropertyNames(result);
-  for PropertyName in PropertyNames do
-    SetPropValue(result, PropertyName, GetPropertyValue(Instance, PropertyName));
+  LPropertyNames := GetPropertyNames(result);
+  for LPropertyName in LPropertyNames do
+    SetPropValue(result, LPropertyName, GetPropertyValue(AInstance, LPropertyName));
 end;
 
 function TyaAbstractORM<T>.NewFilter: IyaFilter;
@@ -692,43 +692,43 @@ begin
   result := FPropertyKeyFields;
 end;
 
-function TyaAbstractORM<T>.GetFieldValues(const FieldNames: TStringArray; const Instance: T): TVariantArray;
+function TyaAbstractORM<T>.GetFieldValues(const AFieldNames: TStringArray; const AInstance: T): TVariantArray;
 var
-  KeyIndex: integer;
-  PropertyName: string;
+  LKeyIndex: integer;
+  LPropertyName: string;
 begin
-  if not Assigned(Instance) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('yaORM.GetFieldValues: Instance not assigned.');
 
-  SetLength(result, Length(FieldNames));
-  for KeyIndex := 0 to High(FieldNames) do
+  SetLength(result, Length(AFieldNames));
+  for LKeyIndex := 0 to High(AFieldNames) do
   begin
-    PropertyName := FieldNames[KeyIndex];
-    result[KeyIndex] := ConvertToFieldValue(PropertyName, GetPropertyValue(Instance, PropertyName));
+    LPropertyName := AFieldNames[LKeyIndex];
+    result[LKeyIndex] := ConvertToFieldValue(LPropertyName, GetPropertyValue(AInstance, LPropertyName));
   end;
 end;
 
-function TyaAbstractORM<T>.Load(const KeyValues: TVariantArray; out Instance: T): boolean;
+function TyaAbstractORM<T>.Load(const AKeyValues: TVariantArray; out OInstance: T): boolean;
 begin
   result := false;
-  if Length(KeyValues) <> Length(FPropertyKeyFields) then
+  if Length(AKeyValues) <> Length(FPropertyKeyFields) then
     raise EyaORMException.Create('yaORM.Load: Number of KeyValues is incorrect.');
 end;
 
-procedure TyaAbstractORM<T>.Delete(const KeyValues: TVariantArray);
+procedure TyaAbstractORM<T>.Delete(const AKeyValues: TVariantArray);
 begin
-  if Length(KeyValues) <> Length(FPropertyKeyFields) then
+  if Length(AKeyValues) <> Length(FPropertyKeyFields) then
     raise EyaORMException.Create('yaORM.Delete: Number of KeyValues is incorrect.');
 end;
 
 { TyaFilter }
 
-constructor TyaFilter<T>.Create(const ORM: IyaORM<T>);
+constructor TyaFilter<T>.Create(const AORM: IyaORM<T>);
 begin
-  if not Assigned(ORM) then
+  if not Assigned(AORM) then
     raise EyaORMException.Create('TyaFilter.Create: ORM is not assigned.');
   FList := TList<TyaFilterCondition>.Create;
-  FORMPointer := ORM;
+  FORMPointer := AORM;
 end;
 
 destructor TyaFilter<T>.Destroy;
@@ -742,114 +742,108 @@ begin
   FList.Clear;
 end;
 
-procedure TyaFilter<T>.AddCondition(const PropertyName: string; const FilterType: TFilterType; const Value: variant);
+procedure TyaFilter<T>.AddCondition(const APropertyName: string; const AFilterType: TFilterType; const AValue: variant);
 var
-  Condition: TyaFilterCondition;
-  FieldName: string;
+  LCondition: TyaFilterCondition;
+  LFieldName: string;
 begin
-  FieldName := IyaORM<T>(FORMPointer).GetFieldName(PropertyName);
+  LFieldName := IyaORM<T>(FORMPointer).GetFieldName(APropertyName);
 
-  if FieldName.IsEmpty then
-    raise EyaORMException.CreateFmt('TyaFilter.AddCondition: Property "%s" does not exist.', [PropertyName]);
+  if LFieldName.IsEmpty then
+    raise EyaORMException.CreateFmt('TyaFilter.AddCondition: Property "%s" does not exist.', [APropertyName]);
 
-  Condition.FieldName := FieldName;
-  Condition.FilterType := FilterType;
-  Condition.Value := IyaORM<T>(FORMPointer).ConvertToFieldValue(PropertyName, Value);
-  FList.Add({%H-}Condition);
+  LCondition.FieldName := LFieldName;
+  LCondition.FilterType := AFilterType;
+  LCondition.Value := IyaORM<T>(FORMPointer).ConvertToFieldValue(APropertyName, AValue);
+  FList.Add({%H-}LCondition);
 end;
 
 procedure TyaFilter<T>.AddAnd;
 var
-  Condition: TyaFilterCondition;
+  LCondition: TyaFilterCondition;
 begin
-  Condition.FilterType := ftAnd;
-  FList.Add({%H-}Condition);
+  LCondition.FilterType := ftAnd;
+  FList.Add({%H-}LCondition);
 end;
 
 procedure TyaFilter<T>.AddOr;
 var
-  Condition: TyaFilterCondition;
+  LCondition: TyaFilterCondition;
 begin
-  Condition.FilterType := ftOr;
-  FList.Add({%H-}Condition);
+  LCondition.FilterType := ftOr;
+  FList.Add({%H-}LCondition);
 end;
 
 procedure TyaFilter<T>.AddNot;
 var
-  Condition: TyaFilterCondition;
+  LCondition: TyaFilterCondition;
 begin
-  Condition.FilterType := ftNot;
-  FList.Add({%H-}Condition);
+  LCondition.FilterType := ftNot;
+  FList.Add({%H-}LCondition);
 end;
 
 procedure TyaFilter<T>.AddOpenBracket;
 var
-  Condition: TyaFilterCondition;
+  LCondition: TyaFilterCondition;
 begin
-  Condition.FilterType := ftOpenedBracket;
-  FList.Add({%H-}Condition);
+  LCondition.FilterType := ftOpenedBracket;
+  FList.Add({%H-}LCondition);
 end;
 
 procedure TyaFilter<T>.AddClosedBracket;
 var
-  Condition: TyaFilterCondition;
+  LCondition: TyaFilterCondition;
 begin
-  Condition.FilterType := ftClosedBracket;
-  FList.Add({%H-}Condition);
+  LCondition.FilterType := ftClosedBracket;
+  FList.Add({%H-}LCondition);
 end;
 
 function TyaFilter<T>.AsString: string;
-var
-  Condition: TyaFilterCondition;
 begin
   result := '';
   with FList.GetEnumerator do
   begin
     while MoveNext do
     begin
-      Condition := Current;
-      case Condition.FilterType of
+      case Current.FilterType of
         ftEqual,
         ftUnequal,
         ftLessThan,
         ftLessThanOrEqual,
         ftMoreThan,
-        ftMoreThanOrEqual: result := result + ' ' + Format(FilterStrings[Condition.FilterType], [Condition.FieldName, Condition.FieldName]);
+        ftMoreThanOrEqual: result := result + ' ' + Format(FilterStrings[Current.FilterType], [Current.FieldName, Current.FieldName]);
         ftIsNull,
-        ftIsNotNull: result := result + ' ' + Format(FilterStrings[Condition.FilterType], [Condition.FieldName]);
+        ftIsNotNull: result := result + ' ' + Format(FilterStrings[Current.FilterType], [Current.FieldName]);
         ftContains,
         ftStartsWith,
-        ftEndsWith: result := result + ' ' + Format(FilterStrings[Condition.FilterType], [Condition.FieldName, Condition.Value]);
+        ftEndsWith: result := result + ' ' + Format(FilterStrings[Current.FilterType], [Current.FieldName, Current.Value]);
         ftAnd,
         ftOr,
         ftNot,
         ftOpenedBracket,
-        ftClosedBracket: result := result + ' ' + FilterStrings[Condition.FilterType];
+        ftClosedBracket: result := result + ' ' + FilterStrings[Current.FilterType];
       end;
     end;
     Free;
   end;
 end;
 
-procedure TyaFilter<T>.SetQueryParams(const Params: TParams);
-var
-  Condition: TyaFilterCondition;
+procedure TyaFilter<T>.SetQueryParams(const AParams: TParams);
 begin
-  if not Assigned(Params) then
+  if not Assigned(AParams) then
     raise EyaORMException.Create('TyaFilter<T>.SetQueryParams: Params not assigned.');
 
   with FList.GetEnumerator do
   begin
     while MoveNext do
     begin
-      Condition := Current;
-      case Condition.FilterType of
+      case Current.FilterType of
         ftEqual,
         ftUnequal,
         ftLessThan,
         ftLessThanOrEqual,
         ftMoreThan,
-        ftMoreThanOrEqual: Params.ParamValues[Condition.FieldName] := Condition.Value;
+        ftMoreThanOrEqual: AParams.ParamValues[Current.FieldName] := Current.Value;
       end;
     end;
     Free;

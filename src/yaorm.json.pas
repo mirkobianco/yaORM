@@ -38,23 +38,23 @@ type
   var
     FORM: IyaORM<T>;
 
-    function JSONDataFromString(const JSON: TJSONStringType): TJSONData;
-    procedure DBJSONToObject(const JSONObject: TJSONObject; out Instance: T);
+    function JSONDataFromString(const AJSON: TJSONStringType): TJSONData;
+    procedure DBJSONToObject(const AJSONObject: TJSONObject; out OInstance: T);
   public
-    constructor Create(const ORM: IyaORM<T>); reintroduce;
+    constructor Create(const AORM: IyaORM<T>); reintroduce;
 
-    function LoadFields(const JSON: TJSONStringType; out Instance: T): boolean;
-    function LoadProperties(const JSON: TJSONStringType; out Instance: T): boolean;
-    function SaveProperties(const Instance: T): TJSONStringType;
+    function LoadFields(const AJSON: TJSONStringType; out OInstance: T): boolean;
+    function LoadProperties(const AJSON: TJSONStringType; out OInstance: T): boolean;
+    function SaveProperties(const AInstance: T): TJSONStringType;
   end;
 
 implementation
 
 { TyaORMToJSONConverter }
 
-function TyaORMToJSONConverter<T>.JSONDataFromString(const JSON: TJSONStringType): TJSONData;
+function TyaORMToJSONConverter<T>.JSONDataFromString(const AJSON: TJSONStringType): TJSONData;
 begin
-  with TJSONParser.Create(JSON, [joUTF8,joStrict,joComments,joIgnoreTrailingComma]) do
+  with TJSONParser.Create(AJSON, [joUTF8,joStrict,joComments,joIgnoreTrailingComma]) do
     try
       result := Parse;
     finally
@@ -62,82 +62,82 @@ begin
     end;
 end;
 
-procedure TyaORMToJSONConverter<T>.DBJSONToObject(const JSONObject: TJSONObject; out Instance: T);
+procedure TyaORMToJSONConverter<T>.DBJSONToObject(const AJSONObject: TJSONObject; out OInstance: T);
 Var
-  Index,
-  PropIndex: Integer;
-  PropInfoList: TPropInfoList;
-  FieldName: string;
+  LIndex,
+  LPropIndex: Integer;
+  LPropInfoList: TPropInfoList;
+  LFieldName: string;
 begin
-  Instance := FORM.New;
-  PropInfoList := TPropInfoList.Create(Instance, tkProperties);
+  OInstance := FORM.New;
+  LPropInfoList := TPropInfoList.Create(OInstance, tkProperties);
   try
-    for Index := 0 to PropInfoList.Count - 1 do
+    for LIndex := 0 to LPropInfoList.Count - 1 do
     begin
-      FieldName := FORM.GetFieldName(PropInfoList.Items[Index]^.Name);
-      PropIndex := JSONObject.IndexOfName(FieldName);
-      if PropIndex <> -1 then
-        FORM.SetPropertyValue(Instance, PropInfoList.Items[Index]^.Name, FORM.ConvertToPropertyValue(FieldName, JSONObject.Items[PropIndex].Value));
+      LFieldName := FORM.GetFieldName(LPropInfoList.Items[LIndex]^.Name);
+      LPropIndex := AJSONObject.IndexOfName(LFieldName);
+      if LPropIndex <> -1 then
+        FORM.SetPropertyValue(OInstance, LPropInfoList.Items[LIndex]^.Name, FORM.ConvertToPropertyValue(LFieldName, AJSONObject.Items[LPropIndex].Value));
     end;
   finally
-    FreeAndNil(PropInfoList);
+    FreeAndNil(LPropInfoList);
   end;
 end;
 
-constructor TyaORMToJSONConverter<T>.Create(const ORM: IyaORM<T>);
+constructor TyaORMToJSONConverter<T>.Create(const AORM: IyaORM<T>);
 begin
-  FORM := ORM;
+  FORM := AORM;
 end;
 
-function TyaORMToJSONConverter<T>.LoadProperties(const JSON: TJSONStringType; out Instance: T): boolean;
+function TyaORMToJSONConverter<T>.LoadProperties(const AJSON: TJSONStringType; out OInstance: T): boolean;
 var
-  DeStreamer: TJSONDeStreamer;
+  LDeStreamer: TJSONDeStreamer;
 begin
-  Instance := FORM.New;
-  DeStreamer := TJSONDeStreamer.Create(nil);
+  OInstance := FORM.New;
+  LDeStreamer := TJSONDeStreamer.Create(nil);
   try
     try
-      DeStreamer.JSONToObject(JSON, Instance);
+      LDeStreamer.JSONToObject(AJSON, OInstance);
     except
       result := false;
     end;
   finally
-    FreeAndNil(DeStreamer);
+    FreeAndNil(LDeStreamer);
   end;
 end;
 
-function TyaORMToJSONConverter<T>.LoadFields(const JSON: TJSONStringType; out Instance: T): boolean;
+function TyaORMToJSONConverter<T>.LoadFields(const AJSON: TJSONStringType; out OInstance: T): boolean;
 var
-  JSONData: TJSONData;
+  LJSONData: TJSONData;
 begin
   try
     try
-      JSONData := JSONDataFromString(JSON);
-      if JSONData.JSONType = jtObject then
-        DBJSONToObject(JSONData as TJSONObject, Instance)
+      LJSONData := JSONDataFromString(AJSON);
+      if LJSONData.JSONType = jtObject then
+        DBJSONToObject(LJSONData as TJSONObject, OInstance)
       else
         result := false;
     except
       result := false;
     end;
   finally
-    FreeAndNil(JSONData);
+    FreeAndNil(LJSONData);
   end;
 end;
 
-function TyaORMToJSONConverter<T>.SaveProperties(const Instance: T): TJSONStringType;
+function TyaORMToJSONConverter<T>.SaveProperties(const AInstance: T): TJSONStringType;
 var
-  Streamer: TJSONStreamer;
+  LStreamer: TJSONStreamer;
 begin
   if not Assigned(Instancce) then
     raise EyaORMException.Create('TyaORMToJSONConverter<T>.SaveProperties: Instance not assigned.');
 
-  Streamer := TJSONStreamer.Create(nil);
+  LStreamer := TJSONStreamer.Create(nil);
   try
-    Streamer.Options := Streamer.Options + [jsoCheckEmptyDateTime, jsoEnumeratedAsInteger, jsoSetAsString];
-    result := Streamer.ObjectToJSONString(Instance);
+    LStreamer.Options := LStreamer.Options + [jsoCheckEmptyDateTime, jsoEnumeratedAsInteger, jsoSetAsString];
+    result := LStreamer.ObjectToJSONString(AInstance);
   finally
-    FreeAndNil(Streamer);
+    FreeAndNil(LStreamer);
   end;
 end;
 
