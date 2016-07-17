@@ -1,5 +1,5 @@
 (*
-  yet another ORM - for FreePascal and Delphi
+  yet another ORM - for FreePascal
   Poor man (TDataset support only) ORM classes
 
   Copyright (C) 2016 Mirko Bianco
@@ -28,9 +28,9 @@ type
   public
     //IyaORM
     function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean; override;
-    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload; override;
-    function LoadList(const AFilter: IyaFilter; out LList: TObjectList<T>): boolean; overload; override;
-    function LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean; overload; override;
+    function LoadCollection(const ASQL: string; out OCollection: TORMCollection<T>): boolean; overload; override;
+    function LoadCollection(const AFilter: IyaFilter; out OCollection: TORMCollection<T>): boolean; overload; override;
+    function LoadCollection(const AKeyValues: TVariantArray; out OCollection: TORMCollection<T>): boolean; overload; override;
     procedure Insert(const AInstance: T); override;
     procedure Update(const AInstance: T); override;
     procedure Delete(const AInstance: T); overload; override;
@@ -47,19 +47,19 @@ begin
   raise EyaORMException.Create('TyaPoorManORM<T>.Load: Operation non supported.');
 end;
 
-function TyaPoorManORM<T>.LoadList(const ASQL: string; out OList: TObjectList<T>): boolean;
+function TyaPoorManORM<T>.LoadCollection(const ASQL: string; out OCollection: TORMCollection<T>): boolean;
 begin
-  raise EyaORMException.Create('TyaPoorManORM<T>.LoadList: Operation non supported.');
+  raise EyaORMException.Create('TyaPoorManORM<T>.LoadCollection(: Operation non supported.');
 end;
 
-function TyaPoorManORM<T>.LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean;
+function TyaPoorManORM<T>.LoadCollection(const AFilter: IyaFilter; out OCollection: TORMCollection<T>): boolean;
 begin
-  raise EyaORMException.Create('TyaPoorManORM<T>.LoadList: Operation non supported.');
+  raise EyaORMException.Create('TyaPoorManORM<T>.LoadCollection(: Operation non supported.');
 end;
 
-function TyaPoorManORM<T>.LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean;
+function TyaPoorManORM<T>.LoadCollection(const AKeyValues: TVariantArray; out OCollection: TORMCollection<T>): boolean;
 begin
-  raise EyaORMException.Create('TyaPoorManORM<T>.LoadList: Operation non supported.');
+  raise EyaORMException.Create('TyaPoorManORM<T>.LoadCollection: Operation non supported.');
 end;
 
 procedure TyaPoorManORM<T>.Insert(const AInstance: T);

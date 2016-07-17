@@ -1,5 +1,5 @@
 (*
-  yet another ORM - for FreePascal and Delphi
+  yet another ORM - for FreePascal
   ORM relationship classes
 
   Copyright (C) 2016 Mirko Bianco
@@ -22,13 +22,14 @@ uses
   Variants,
   TypInfo,
   yaORM.Types,
+  yaORM.Collections,
   yaORM;
 
 type
 
   { TyaOneToOneRelationship }
 
-  TyaOneToOneRelationship<TMasterObject: TObject; TLinkedObject: TObject> = class
+  TyaOneToOneRelationship<TMasterObject: TCollectionItem; TLinkedObject: TCollectionItem> = class
   strict private
   var
     FMasterObject: TMasterObject;
@@ -40,6 +41,7 @@ type
 
     function GetLinkedObject: TLinkedObject;
     procedure SetLinkedObject(const ALinkedObject: TLinkedObject);
+    procedure CheckMasterObject;
   public
     constructor Create(const AMasterObject: TMasterObject;
                        const AMasterObjectLinkedKeys: TStringArray;
@@ -55,14 +57,16 @@ type
 
   { TyaOneToManyRelationship }
 
-  TyaOneToManyRelationship<TMasterObject: TObject; TDetailObject: TObject> = class
+  TyaOneToManyRelationship<TMasterObject: TCollectionItem; TDetailObject: TCollectionItem> = class
   strict private
   var
     FMasterObject: TMasterObject;
     FMasterObjectDetailKeys: TStringArray;
-    FDetailObjects: TObjectList<TDetailObject>;
+    FDetailObjects: TORMCollection<TDetailObject>;
     FMasterORM: IyaORM<TMasterObject>;
     FDetailORM: IyaORM<TDetailObject>;
+
+    procedure CheckMasterObject;
   public
     constructor Create(const AMasterObject: TMasterObject;
                        const AMasterObjectDetailKeys: TStringArray;
@@ -71,7 +75,7 @@ type
     destructor Destroy; override;
 
     procedure CheckDetailObjects;
-    function GetDetailObjects: TObjectList<TDetailObject>;
+    function GetDetailObjects: TCollection;
   end;
 
 implementation
@@ -104,10 +108,12 @@ var
   LIsNull: boolean;
   LKeyValues: TVariantArray;
 begin
+  CheckMasterObject;
+
   LIsNull := false;
   SetLength(LKeyValues, Length(FMasterObjectDetailKeys));
   for LKey in FMasterObjectDetailKeys do
-    if VariantIsEmptyOrNull(FMasterORM.GetPropertyValue(FMasterObject, LKey)) then
+    if VariantIsEmptyOrNull(GetPropValue(FMasterObject, LKey)) then
       LIsNull := true;
 
   LKeyValues := FMasterORM.GetFieldValues(FMasterObjectDetailKeys, FMasterObject);
@@ -116,12 +122,18 @@ begin
   if LIsNull then
     Exit;
 
-  FDetailORM.LoadList(LKeyValues, FDetailObjects);
+  FDetailORM.LoadCollection(LKeyValues, FDetailObjects);
 end;
 
-function TyaOneToManyRelationship<TMasterObject, TDetailObject>.GetDetailObjects: TObjectList<TDetailObject>;
+function TyaOneToManyRelationship<TMasterObject, TDetailObject>.GetDetailObjects: TCollection;
 begin
   result := FDetailObjects;
+end;
+
+procedure TyaOneToManyRelationship<TMasterObject, TDetailObject>.CheckMasterObject;
+begin
+  if not Assigned(FMasterObject) then
+    raise EyaORMException.Create('TyaOneToManyRelationship: FMasterObject is not assigned.');
 end;
 
 { TyaOneToOneRelationship }
@@ -154,11 +166,14 @@ var
 begin
   if not FCheckIsEnabled then
     Exit;
+
+  CheckMasterObject;
+
   LIsNull := false;
   SetLength(LKeyValues, Length(FMasterObjectLinkedKeys));
   for LKey in FMasterObjectLinkedKeys do
   begin
-    if VariantIsEmptyOrNull(FMasterORM.GetPropertyValue(FMasterObject, LKey)) then
+    if VariantIsEmptyOrNull(GetPropValue(FMasterObject, LKey)) then
       LIsNull := true;
   end;
 
@@ -168,7 +183,8 @@ begin
   if LIsNull then
     Exit;
 
-  FLinkedORM.Load(LKeyValues, FLinkedObject);
+  if not FLinkedORM.Load(LKeyValues, FLinkedObject) then
+    raise EyaORMException.Create('TyaOneToOneRelationship: Object not found.');
 end;
 
 function TyaOneToOneRelationship<TMasterObject, TLinkedObject>.GetLinkedObject: TLinkedObject;
@@ -180,14 +196,22 @@ procedure TyaOneToOneRelationship<TMasterObject, TLinkedObject>.SetLinkedObject(
 var
   LIndex: integer;
 begin
+  CheckMasterObject;
+
   FreeAndNil(FLinkedObject);
   FLinkedObject := ALinkedObject;
   FCheckIsEnabled := false;
 
   for LIndex := Low(FLinkedORM.GetPropertyKeyFields) to High(FLinkedORM.GetPropertyKeyFields) do
-    SetPropValue(FMasterObject, FMasterObjectLinkedKeys[LIndex], FLinkedORM.GetPropertyValue(FLinkedObject, FLinkedORM.GetPropertyKeyFields[LIndex]));
+    SetPropValue(FMasterObject, FMasterObjectLinkedKeys[LIndex], GetPropValue(FLinkedObject, FLinkedORM.GetPropertyKeyFields[LIndex]));
 
   FCheckIsEnabled := true;
+end;
+
+procedure TyaOneToOneRelationship<TMasterObject, TDetailObject>.CheckMasterObject;
+begin
+  if not Assigned(FMasterObject) then
+    raise EyaORMException.Create('TyaOneToOneRelationship: FMasterObject is not assigned.');
 end;
 
 end.

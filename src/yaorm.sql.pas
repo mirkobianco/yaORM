@@ -1,5 +1,5 @@
 (*
-  yet another ORM - for FreePascal and Delphi
+  yet another ORM - for FreePascal
   SQL (sqldb) based ORM class
 
   Copyright (C) 2016 Mirko Bianco
@@ -21,12 +21,13 @@ uses
   DB,
   sqldb,
   yaORM.Types,
+  yaORM.Collections,
   yaORM;
 
 type
   { TyaSQLORM }
 
-  TyaSQLORM<T: TObject> = class(TyaAbstractORM<T>)
+  TyaSQLORM<T: TCollectionItem> = class(TyaAbstractORM<T>)
   strict protected
     FSQLConnection: TSQLConnection;
     FSQLTransaction: TSQLTransaction;
@@ -44,9 +45,9 @@ type
 
     //IyaORM
     function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean; override;
-    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload; override;
-    function LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean; overload; override;
-    function LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean; overload; override;
+    function LoadCollection(const ASQL: string; out OCollection: TORMCollection<T>): boolean; overload; override;
+    function LoadCollection(const AFilter: IyaFilter; out OCollection: TORMCollection<T>): boolean; overload; override;
+    function LoadCollection(const AKeyValues: TVariantArray; out OCollection: TORMCollection<T>): boolean; overload; override;
     procedure Insert(const AInstance: T); override;
     procedure Update(const AInstance: T); override;
     procedure Delete(const AInstance: T); overload; override;
@@ -120,12 +121,12 @@ begin
   end;
 end;
 
-function TyaSQLORM<T>.LoadList(const ASQL: string; out OList: TObjectList<T>): boolean;
+function TyaSQLORM<T>.LoadCollection(const ASQL: string; out OCollection: TORMCollection<T>): boolean;
 var
   LQuery: TSQLQuery;
 begin
   result := false;
-  OList := nil;
+  OCollection := nil;
   LQuery := TSQLQuery.Create(nil);
   try
     LQuery.SQLConnection := FSQLConnection;
@@ -138,11 +139,11 @@ begin
       if not result then
         Exit;
 
-      GetObjects(LQuery, OList);
+      GetObjects(LQuery, OCollection);
     except
       on E: Exception do
       begin
-        FreeAndNil(OList);
+        FreeAndNil(OCollection);
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Load: %s', [E.Message]);
       end;
     end;
@@ -151,13 +152,13 @@ begin
   end;
 end;
 
-function TyaSQLORM<T>.LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean;
+function TyaSQLORM<T>.LoadCollection(const AFilter: IyaFilter; out OCollection: TORMCollection<T>): boolean;
 var
   LQuery: TSQLQuery;
   LInstance: T;
 begin
   result := false;
-  OList := nil;
+  OCollection := nil;
   LQuery := TSQLQuery.Create(nil);
   LInstance := New;
   try
@@ -172,7 +173,7 @@ begin
       if not result then
         Exit;
 
-      GetObjects(LQuery, OList);
+      GetObjects(LQuery, OCollection);
     except
       on E: Exception do
       begin
@@ -185,13 +186,13 @@ begin
   end;
 end;
 
-function TyaSQLORM<T>.LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean;
+function TyaSQLORM<T>.LoadCollection(const AKeyValues: TVariantArray; out OCollection: TORMCollection<T>): boolean;
 var
   LQuery: TSQLQuery;
   LInstance: T;
 begin
   result := false;
-  OList := nil;
+  OCollection := nil;
   LQuery := TSQLQuery.Create(nil);
   try
     LQuery.SQLConnection := FSQLConnection;
@@ -207,11 +208,11 @@ begin
       if not result then
         Exit;
 
-      GetObjects(LQuery, OList);
+      GetObjects(LQuery, OCollection);
     except
       on E: Exception do
       begin
-        FreeAndNil(OList);
+        FreeAndNil(OCollection);
         FreeAndNil(LInstance);
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Load: %s', [E.Message]);
       end;

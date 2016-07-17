@@ -1,5 +1,5 @@
 (*
-  yet another ORM - for FreePascal and Delphi
+  yet another ORM - for FreePascal
   Core ORM classes
 
   Copyright (C) 2016 Mirko Bianco
@@ -22,7 +22,8 @@ uses
   Variants,
   DB,
   TypInfo,
-  yaORM.Types;
+  yaORM.Types,
+  yaORM.Collections;
 
 type
   IyaFilter = interface(IInterface)
@@ -41,11 +42,11 @@ type
 
   { IyaORM }
 
-  IyaORM<T: TObject> = interface(IInterface)
+  IyaORM<T: TCollectionItem> = interface(IInterface)
     ['{E88D8D4D-B71E-E611-9290-080027BF4002}']
     function GetObject(const AFields: TFields): T;
-    procedure GetObjects(const ADataset: TDataset; out OList: TObjectList<T>);
-    procedure SetObjects(const AList: TObjectList<T>; const ADataset: TDataset);
+    procedure GetObjects(const ADataset: TDataset; out OCollection: TORMCollection<T>);
+    procedure SetObjects(const ACollection: TORMCollection<T>; const ADataset: TDataset);
     procedure SetObject(const AInstance: T; const ADataset: TDataset);
 
     function New: T;
@@ -54,14 +55,13 @@ type
 
     function GetPropertyKeyFields: TStringArray;
     function GetFieldName(const APropertyName: string): string;
-    function GetPropertyValue(const AInstance: T; const APropertyName: string): variant;
     function ConvertToFieldValue(const APropertyName: string; const APropertyValue: variant): variant;
     function GetFieldValues(const AFieldNames: TStringArray; const AInstance: T): TVariantArray;
 
     function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean;
-    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload;
-    function LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean; overload;
-    function LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean; overload;
+    function LoadCollection(const ASQL: string; out OCollection: TORMCollection<T>): boolean; overload;
+    function LoadCollection(const AFilter: IyaFilter; out OCollection: TORMCollection<T>): boolean; overload;
+    function LoadCollection(const AKeyValues: TVariantArray; out OCollection: TORMCollection<T>): boolean; overload;
     procedure Insert(const AInstance: T);
     procedure Update(const AInstance: T);
     procedure Delete(const AInstance: T); overload;
@@ -71,7 +71,7 @@ type
 
   { TyaFilter }
 
-  TyaFilter<T: TObject> = class(TInterfacedObject, IyaFilter)
+  TyaFilter<T: TCollectionItem> = class(TInterfacedObject, IyaFilter)
   strict private
   var
     FList: TList<TyaFilterCondition>;
@@ -95,7 +95,7 @@ type
 
   { TyaAbstractORM }
 
-  TyaAbstractORM<T: TObject> = class(TInterfacedObject, IyaORM<T>)
+  TyaAbstractORM<T: TCollectionItem> = class(TInterfacedObject, IyaORM<T>)
   public
   type
     TFactoryFunc = function: T of object;
@@ -141,24 +141,24 @@ type
 
     //IyaORM
     function GetObject(const AFields: TFields): T;
-    procedure GetObjects(const ADataset: TDataset; out OList: TObjectList<T>);
-    procedure SetObjects(const AList: TObjectList<T>; const ADataset: TDataset);
+    procedure GetObjects(const ADataset: TDataset; out OCollection: TORMCollection<T>);
+    procedure SetObjects(const ACollection: TORMCollection<T>; const ADataset: TDataset);
     procedure SetObject(const AInstance: T; const ADataset: TDataset);
 
     function New: T;
     function Clone(const AInstance: T): T;
     function NewFilter: IyaFilter;
+
     function GetPropertyKeyFields: TStringArray;
     function GetFieldName(const APropertyName: string): string;
-    function GetPropertyValue(const AInstance: T; const APropertyName: string): variant;
-    procedure SetPropertyValue(const AInstance: T; const APropertyName: string; const APropertyValue: variant);
     function ConvertToFieldValue(const APropertyName: string; const APropertyValue: variant): variant;
     function ConvertToPropertyValue(const AFieldName: string; const AFieldValue: variant): variant;
     function GetFieldValues(const AFieldNames: TStringArray; const AInstance: T): TVariantArray;
+
     function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean; virtual;
-    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload; virtual; abstract;
-    function LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean; overload; virtual; abstract;
-    function LoadList(const AKeyValues: TVariantArray; out OList: TObjectList<T>): boolean; overload; virtual; abstract;
+    function LoadCollection(const ASQL: string; out OCollection: TORMCollection<T>): boolean; overload; virtual; abstract;
+    function LoadCollection(const AFilter: IyaFilter; out OCollection: TORMCollection<T>): boolean; overload; virtual; abstract;
+    function LoadCollection(const AKeyValues: TVariantArray; out OCollection: TORMCollection<T>): boolean; overload; virtual; abstract;
     procedure Insert(const AInstance: T); virtual; abstract;
     procedure Update(const AInstance: T); virtual; abstract;
     procedure Delete(const AInstance: T); overload; virtual; abstract;
@@ -169,29 +169,6 @@ type
 implementation
 
 { yaORM }
-
-function TyaAbstractORM<T>.GetPropertyValue(const AInstance: T; const APropertyName: string): variant;
-var
-  LPropInfo: PPropInfo;
-begin
-  if not Assigned(AInstance) then
-    raise EyaORMException.Create('TyaAbstractORM<T>.GetPropertyValue: Instance not assigned.');
-  result := null;
-  LPropInfo := GetPropInfo(PTypeInfo(AInstance.ClassInfo), APropertyName);
-  if assigned(LPropInfo) then
-    result := GetPropValue(AInstance, LPropInfo);
-end;
-
-procedure TyaAbstractORM<T>.SetPropertyValue(const AInstance: T; const APropertyName: string; const APropertyValue: variant);
-var
-  LPropInfo: PPropInfo;
-begin
-  if not Assigned(AInstance) then
-    raise EyaORMException.Create('TyaAbstractORM<T>.SetPropertyValue: Instance not assigned.');
-  LPropInfo := GetPropInfo(PTypeInfo(AInstance.ClassInfo), APropertyName);
-  if assigned(LPropInfo) then
-    SetPropValue(AInstance, LPropInfo, APropertyValue);
-end;
 
 constructor TyaAbstractORM<T>.Create(const AFactoryFunc: TFactoryFunc;
                                      const ATableName: string;
@@ -269,7 +246,7 @@ begin
     if not FFieldToPropertyMap.{$IFDEF FPC}TryGetData{$ELSE}TryGetValue{$ENDIF}(LField.FieldName, LPropertyName) or LPropertyName.IsEmpty then
       LPropertyName := LField.FieldName;
 
-    LField.Value := ConvertToFieldValue(LPropertyName, GetPropertyValue(AInstance, LPropertyName));
+    LField.Value := ConvertToFieldValue(LPropertyName, GetPropValue(AInstance, LPropertyName));
   end;
 end;
 
@@ -292,7 +269,7 @@ begin
     if not FFieldToPropertyMap.{$IFDEF FPC}TryGetData{$ELSE}TryGetValue{$ENDIF}(LParam.Name, LPropertyName) or LPropertyName.IsEmpty then
       LPropertyName := LParam.Name;
 
-    LParam.Value := ConvertToFieldValue(LPropertyName, GetPropertyValue(AInstance, LPropertyName));
+    LParam.Value := ConvertToFieldValue(LPropertyName, GetPropValue(AInstance, LPropertyName));
   end;
 end;
 
@@ -405,7 +382,7 @@ begin
 
   result := true;
   for LKeyIndex := Low(FFieldKeyFields) to High(FFieldKeyFields) do
-    result := result and VarSameValue(AFields.FieldByName(FFieldKeyFields[LKeyIndex]).Value, GetPropertyValue(AInstance, FPropertyKeyFields[LKeyIndex]));
+    result := result and VarSameValue(AFields.FieldByName(FFieldKeyFields[LKeyIndex]).Value, GetPropValue(AInstance, FPropertyKeyFields[LKeyIndex]));
 end;
 
 procedure TyaAbstractORM<T>.CreateSelectSQL(const AInstance: T; const ASQL: TStrings);
@@ -605,45 +582,48 @@ begin
   CopyFieldsToInstance(AFields, result);
 end;
 
-procedure TyaAbstractORM<T>.GetObjects(const ADataset: TDataset; out OList: TObjectList<T>);
+procedure TyaAbstractORM<T>.GetObjects(const ADataset: TDataset; out OCollection: TORMCollection<T>);
+var
+  LObject: T;
 begin
   if not Assigned(ADataset) then
     raise EyaORMException.Create('yaORM.GetObjects: Dataset not assigned.');
 
-  OList := TObjectList<T>.Create;
+  OCollection := TORMCollection<T>.Create;
 
   ADataset.First;
   while not ADataset.EOF do
   begin
-    OList.Add(GetObject(ADataset.Fields));
+    LObject := GetObject(ADataset.Fields);
+    LObject.Collection := OCollection;
     ADataset.Next;
   end;
 end;
 
-procedure TyaAbstractORM<T>.SetObjects(const AList: TObjectList<T>; const ADataset: TDataset);
+procedure TyaAbstractORM<T>.SetObjects(const ACollection: TORMCollection<T>; const ADataset: TDataset);
 var
-  LInstance: T;
+  LInstance: TCollectionItem;
   LFound: boolean;
 begin
   if not Assigned(ADataset) then
     raise EyaORMException.Create('yaORM.SetObjects: Dataset not assigned.');
-  if not Assigned(AList) then
-    raise EyaORMException.Create('yaORM.SetObjects: List not assigned.');
+  if not Assigned(ACollection) then
+    raise EyaORMException.Create('yaORM.SetObjects: Collection not assigned.');
 
   ADataset.First;
   while not ADataset.EOF do
   begin
     LFound := false;
-    for LInstance in AList do
-      LFound := LFound or HasSameKeys(LInstance, ADataset.Fields);
+    for LInstance in ACollection do
+      LFound := LFound or HasSameKeys(T(LInstance), ADataset.Fields);
     if LFound then
       ADataset.Next
     else
       ADataset.Delete;
   end;
 
-  for LInstance in AList do
-    SetObject(LInstance, ADataset);
+  for LInstance in ACollection do
+    SetObject(T(LInstance), ADataset);
 end;
 
 procedure TyaAbstractORM<T>.SetObject(const AInstance: T; const ADataset: TDataset);
@@ -679,7 +659,7 @@ begin
   result := New;
   LPropertyNames := GetPropertyNames(result);
   for LPropertyName in LPropertyNames do
-    SetPropValue(result, LPropertyName, GetPropertyValue(AInstance, LPropertyName));
+    SetPropValue(result, LPropertyName, GetPropValue(AInstance, LPropertyName));
 end;
 
 function TyaAbstractORM<T>.NewFilter: IyaFilter;
@@ -704,7 +684,7 @@ begin
   for LKeyIndex := 0 to High(AFieldNames) do
   begin
     LPropertyName := AFieldNames[LKeyIndex];
-    result[LKeyIndex] := ConvertToFieldValue(LPropertyName, GetPropertyValue(AInstance, LPropertyName));
+    result[LKeyIndex] := ConvertToFieldValue(LPropertyName, GetPropValue(AInstance, LPropertyName));
   end;
 end;
 

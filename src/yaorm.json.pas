@@ -1,5 +1,5 @@
 (*
-  yet another ORM - for FreePascal and Delphi
+  yet another ORM - for FreePascal
   JSON ORM converter class
 
   Copyright (C) 2016 Mirko Bianco
@@ -30,20 +30,23 @@ uses
   yaORM;
 
 type
+  { IyaORMToJSONConverter }
+
+  IyaORMToJSONConverter<T: TCollectionItem> = interface(IInterface)
+    ['{42E56C93-8547-E611-9DEE-080027BF4002}']
+    function LoadProperties(const AJSON: TJSONStringType; out OInstance: T): boolean;
+    function SaveProperties(const AInstance: T): TJSONStringType;
+  end;
 
   { TyaORMToJSONConverter }
 
-  TyaORMToJSONConverter<T: Tobject> = class
+  TyaORMToJSONConverter<T: TCollectionItem> = class(TInterfacedObject, IyaORMToJSONConverter<T>)
   strict private
   var
     FORM: IyaORM<T>;
-
-    function JSONDataFromString(const AJSON: TJSONStringType): TJSONData;
-    procedure DBJSONToObject(const AJSONObject: TJSONObject; out OInstance: T);
   public
     constructor Create(const AORM: IyaORM<T>); reintroduce;
-
-    function LoadFields(const AJSON: TJSONStringType; out OInstance: T): boolean;
+    //IyaORMToJSONConverter<T>
     function LoadProperties(const AJSON: TJSONStringType; out OInstance: T): boolean;
     function SaveProperties(const AInstance: T): TJSONStringType;
   end;
@@ -51,39 +54,6 @@ type
 implementation
 
 { TyaORMToJSONConverter }
-
-function TyaORMToJSONConverter<T>.JSONDataFromString(const AJSON: TJSONStringType): TJSONData;
-begin
-  with TJSONParser.Create(AJSON, [joUTF8,joStrict,joComments,joIgnoreTrailingComma]) do
-    try
-      result := Parse;
-    finally
-      Free;
-    end;
-end;
-
-procedure TyaORMToJSONConverter<T>.DBJSONToObject(const AJSONObject: TJSONObject; out OInstance: T);
-Var
-  LIndex,
-  LPropIndex: Integer;
-  LPropInfoList: TPropInfoList;
-  LFieldName: string;
-begin
-  OInstance := FORM.New;
-  LPropInfoList := TPropInfoList.Create(OInstance, tkProperties);
-  try
-    for LIndex := 0 to LPropInfoList.Count - 1 do
-    begin
-      LFieldName := FORM.GetFieldName(LPropInfoList.Items[LIndex]^.Name);
-      LPropIndex := AJSONObject.IndexOfName(LFieldName);
-      if LPropIndex <> -1 then
-        FORM.SetPropertyValue(OInstance, LPropInfoList.Items[LIndex]^.Name, FORM.ConvertToPropertyValue(LFieldName, AJSONObject.Items[LPropIndex].Value));
-    end;
-  finally
-    FreeAndNil(LPropInfoList);
-  end;
-end;
-
 constructor TyaORMToJSONConverter<T>.Create(const AORM: IyaORM<T>);
 begin
   FORM := AORM;
@@ -106,30 +76,11 @@ begin
   end;
 end;
 
-function TyaORMToJSONConverter<T>.LoadFields(const AJSON: TJSONStringType; out OInstance: T): boolean;
-var
-  LJSONData: TJSONData;
-begin
-  try
-    try
-      LJSONData := JSONDataFromString(AJSON);
-      if LJSONData.JSONType = jtObject then
-        DBJSONToObject(LJSONData as TJSONObject, OInstance)
-      else
-        result := false;
-    except
-      result := false;
-    end;
-  finally
-    FreeAndNil(LJSONData);
-  end;
-end;
-
 function TyaORMToJSONConverter<T>.SaveProperties(const AInstance: T): TJSONStringType;
 var
   LStreamer: TJSONStreamer;
 begin
-  if not Assigned(Instancce) then
+  if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaORMToJSONConverter<T>.SaveProperties: Instance not assigned.');
 
   LStreamer := TJSONStreamer.Create(nil);
