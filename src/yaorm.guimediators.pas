@@ -24,7 +24,7 @@ uses
   yaORM;
 
 type
-  { TGUIPropertyMediator<TImen, TGUIControl> }
+  { TGUIPropertyMediator<TItem, TGUIControl> }
 
   TGUIPropertyMediator<TItem: TCollectionItem; TGUIControl: TWinControl> = class(TObject, IFPObserver)
   strict private
