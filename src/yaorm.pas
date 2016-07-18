@@ -42,36 +42,36 @@ type
 
   { IyaORM }
 
-  IyaORM<T: TCollectionItem> = interface(IInterface)
+  IyaORM<T: TPersistent> = interface(IInterface)
     ['{E88D8D4D-B71E-E611-9290-080027BF4002}']
     function GetObject(const AFields: TFields): T;
-    procedure GetObjects(const ADataset: TDataset; out OCollection: TORMCollection<T>);
-    procedure SetObjects(const ACollection: TORMCollection<T>; const ADataset: TDataset);
+    procedure GetObjects(const ADataset: TDataset; out OList: TObjectList<T>);
+    procedure SetObjects(const AList: TObjectList<T>; const ADataset: TDataset);
     procedure SetObject(const AInstance: T; const ADataset: TDataset);
 
     function New: T;
     function Clone(const AInstance: T): T;
     function NewFilter: IyaFilter;
 
-    function GetPropertyKeyFields: TStringArray;
+    function GetPropertyKeyFields: TORMStringArray;
     function GetFieldName(const APropertyName: string): string;
     function ConvertToFieldValue(const APropertyName: string; const APropertyValue: variant): variant;
-    function GetFieldValues(const AFieldNames: TStringArray; const AInstance: T): TVariantArray;
+    function GetFieldValues(const AFieldNames: TORMStringArray; const AInstance: T): TORMVariantArray;
 
-    function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean;
-    function LoadCollection(const ASQL: string; out OCollection: TORMCollection<T>): boolean; overload;
-    function LoadCollection(const AFilter: IyaFilter; out OCollection: TORMCollection<T>): boolean; overload;
-    function LoadCollection(const AKeyValues: TVariantArray; out OCollection: TORMCollection<T>): boolean; overload;
+    function Load(const AKeyValues: TORMVariantArray; out OInstance: T): boolean;
+    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload;
+    function LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean; overload;
+    function LoadList(const AKeyValues: TORMVariantArray; out OList: TObjectList<T>): boolean; overload;
     procedure Insert(const AInstance: T);
     procedure Update(const AInstance: T);
     procedure Delete(const AInstance: T); overload;
-    procedure Delete(const AKeyValues: TVariantArray); overload;
+    procedure Delete(const AKeyValues: TORMVariantArray); overload;
     procedure Delete(const AFilter: IyaFilter); overload;
   end;
 
   { TyaFilter }
 
-  TyaFilter<T: TCollectionItem> = class(TInterfacedObject, IyaFilter)
+  TyaFilter<T: TPersistent> = class(TInterfacedObject, IyaFilter)
   strict private
   var
     FList: TList<TyaFilterCondition>;
@@ -95,26 +95,26 @@ type
 
   { TyaAbstractORM }
 
-  TyaAbstractORM<T: TCollectionItem> = class(TInterfacedObject, IyaORM<T>)
+  TyaAbstractORM<T: TPersistent> = class(TInterfacedObject, IyaORM<T>)
   public
   type
     TFactoryFunc = function: T of object;
   strict private
-    procedure PrepareKeyValuesParams(const AKeyValues: TVariantArray; const AParams: TParams);
+    procedure PrepareKeyValuesParams(const AKeyValues: TORMVariantArray; const AParams: TParams);
     procedure PrepareFilterParams(const AFilter: IyaFilter; const AParams: TParams);
     procedure CopyInstanceToFields(const AInstance: T; const AFields: TFields);
-    function Concat(const AStringArray: TStringArray; const ASeparator: string): string; overload;
-    function Concat(const AStringArray: TStringArray; const ASeparator: string; const APrefix: string): string; overload;
+    function Concat(const AStringArray: TORMStringArray; const ASeparator: string): string; overload;
+    function Concat(const AStringArray: TORMStringArray; const ASeparator: string; const APrefix: string): string; overload;
     function ConvertFieldKeyArrayToFieldKeyStr: string;
-    function GetFieldNames(const AInstance: T): TStringArray;
-    function GetPropertyNames(const AInstance: T): TStringArray;
+    function GetFieldNames(const AInstance: T): TORMStringArray;
+    function GetPropertyNames(const AInstance: T): TORMStringArray;
     function HasSameKeys(const AInstance: T; const AFields: TFields): boolean;
   strict protected
   var
     FFactoryFunc: TFactoryFunc;
     FTableName: string;
-    FPropertyKeyFields: TStringArray;
-    FFieldKeyFields: TStringArray;
+    FPropertyKeyFields: TORMStringArray;
+    FFieldKeyFields: TORMStringArray;
     FFieldKeyFieldsStr: string;
     FFieldToPropertyMap: TDictionary<string, string>;
     FFieldToPropertyConversionFunc: TConversionFunc;
@@ -122,18 +122,18 @@ type
 
     procedure CopyFieldsToInstance(const AFields: TFields; const AInstance: T);
     procedure CopyInstanceToParams(const AInstance: T; const AParams: TParams);
-    function GetKeyValues(const AInstance: T): TVariantArray;
+    function GetKeyValues(const AInstance: T): TORMVariantArray;
 
     procedure CreateSelectSQL(const AInstance: T; const ASQL: TStrings);
     procedure CreateInsertSQL(const AInstance: T; const ASQL: TStrings);
     procedure CreateUpdateSQL(const AInstance: T; const ASQL: TStrings);
     procedure CreateDeleteSQL(const ASQL: TStrings);
-    procedure AddKeyValuesConditions(const AKeyValues: TVariantArray; const ASQL: TStrings; const AParams: TParams);
+    procedure AddKeyValuesConditions(const AKeyValues: TORMVariantArray; const ASQL: TStrings; const AParams: TParams);
     procedure AddFilterConditions(const AFilter: IyaFilter; const ASQL: TStrings; const AParams: TParams);
   public
     constructor Create(const AFactoryFunc: TFactoryFunc;
                        const ATableName: string;
-                       const APropertyKeyFields: TStringArray;
+                       const APropertyKeyFields: TORMStringArray;
                        const AFieldToPropertyMap: TDictionary<string, string> = nil;
                        const AFieldToPropertyConversionFunc: TConversionFunc = nil;
                        const APropertytoFieldConversionFunc: TConversionFunc = nil); reintroduce;
@@ -141,28 +141,28 @@ type
 
     //IyaORM
     function GetObject(const AFields: TFields): T;
-    procedure GetObjects(const ADataset: TDataset; out OCollection: TORMCollection<T>);
-    procedure SetObjects(const ACollection: TORMCollection<T>; const ADataset: TDataset);
+    procedure GetObjects(const ADataset: TDataset; out OList: TObjectList<T>);
+    procedure SetObjects(const AList: TObjectList<T>; const ADataset: TDataset);
     procedure SetObject(const AInstance: T; const ADataset: TDataset);
 
     function New: T;
     function Clone(const AInstance: T): T;
     function NewFilter: IyaFilter;
 
-    function GetPropertyKeyFields: TStringArray;
+    function GetPropertyKeyFields: TORMStringArray;
     function GetFieldName(const APropertyName: string): string;
     function ConvertToFieldValue(const APropertyName: string; const APropertyValue: variant): variant;
     function ConvertToPropertyValue(const AFieldName: string; const AFieldValue: variant): variant;
-    function GetFieldValues(const AFieldNames: TStringArray; const AInstance: T): TVariantArray;
+    function GetFieldValues(const AFieldNames: TORMStringArray; const AInstance: T): TORMVariantArray;
 
-    function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean; virtual;
-    function LoadCollection(const ASQL: string; out OCollection: TORMCollection<T>): boolean; overload; virtual; abstract;
-    function LoadCollection(const AFilter: IyaFilter; out OCollection: TORMCollection<T>): boolean; overload; virtual; abstract;
-    function LoadCollection(const AKeyValues: TVariantArray; out OCollection: TORMCollection<T>): boolean; overload; virtual; abstract;
+    function Load(const AKeyValues: TORMVariantArray; out OInstance: T): boolean; virtual;
+    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload; virtual; abstract;
+    function LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean; overload; virtual; abstract;
+    function LoadList(const AKeyValues: TORMVariantArray; out OList: TObjectList<T>): boolean; overload; virtual; abstract;
     procedure Insert(const AInstance: T); virtual; abstract;
     procedure Update(const AInstance: T); virtual; abstract;
     procedure Delete(const AInstance: T); overload; virtual; abstract;
-    procedure Delete(const AKeyValues: TVariantArray); overload; virtual;
+    procedure Delete(const AKeyValues: TORMVariantArray); overload; virtual;
     procedure Delete(const AFilter: IyaFilter); overload; virtual; abstract;
   end;
 
@@ -172,7 +172,7 @@ implementation
 
 constructor TyaAbstractORM<T>.Create(const AFactoryFunc: TFactoryFunc;
                                      const ATableName: string;
-                                     const APropertyKeyFields: TStringArray;
+                                     const APropertyKeyFields: TORMStringArray;
                                      const AFieldToPropertyMap: TDictionary<string, string>;
                                      const AFieldToPropertyConversionFunc: TConversionFunc;
                                      const APropertytoFieldConversionFunc: TConversionFunc);
@@ -197,6 +197,8 @@ end;
 
 destructor TyaAbstractORM<T>.Destroy;
 begin
+  SetLength(FFieldKeyFields, 0);
+  FFieldKeyFields := nil;
   FreeAndNil(FFieldToPropertyMap);
   inherited Destroy;
 end;
@@ -273,7 +275,7 @@ begin
   end;
 end;
 
-function TyaAbstractORM<T>.GetFieldNames(const AInstance: T): TStringArray;
+function TyaAbstractORM<T>.GetFieldNames(const AInstance: T): TORMStringArray;
 var
   LPT: PTypeData;
   LCount,
@@ -315,7 +317,7 @@ begin
   FreeMem(LPP);
 end;
 
-function TyaAbstractORM<T>.GetPropertyNames(const AInstance: T): TStringArray;
+function TyaAbstractORM<T>.GetPropertyNames(const AInstance: T): TORMStringArray;
 var
   LPT: PTypeData;
   LCount,
@@ -387,7 +389,7 @@ end;
 
 procedure TyaAbstractORM<T>.CreateSelectSQL(const AInstance: T; const ASQL: TStrings);
 var
-  LFieldNames: TStringArray;
+  LFieldNames: TORMStringArray;
 begin
   if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CreateSelectSQL: Instance not assigned.');
@@ -404,7 +406,7 @@ end;
 
 procedure TyaAbstractORM<T>.CreateInsertSQL(const AInstance: T; const ASQL: TStrings);
 var
-  LFieldNames: TStringArray;
+  LFieldNames: TORMStringArray;
 begin
   if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaAbstractORM<T>.CreateInsertSQL: Instance not assigned.');
@@ -420,7 +422,7 @@ end;
 
 procedure TyaAbstractORM<T>.CreateUpdateSQL(const AInstance: T; const ASQL: TStrings);
 var
-  LFieldNames: TStringArray;
+  LFieldNames: TORMStringArray;
   LIndex,
   LKeyIndex: integer;
   LFirst,
@@ -470,7 +472,7 @@ begin
   ASQL.Add(Format('DELETE FROM %s', [FTableName]));
 end;
 
-procedure TyaAbstractORM<T>.AddKeyValuesConditions(const AKeyValues: TVariantArray; const ASQL: TStrings; const AParams: TParams);
+procedure TyaAbstractORM<T>.AddKeyValuesConditions(const AKeyValues: TORMVariantArray; const ASQL: TStrings; const AParams: TParams);
 var
   LIndex: integer;
 begin
@@ -506,7 +508,7 @@ begin
   PrepareFilterParams(AFilter, AParams);
 end;
 
-procedure TyaAbstractORM<T>.PrepareKeyValuesParams(const AKeyValues: TVariantArray; const AParams: TParams);
+procedure TyaAbstractORM<T>.PrepareKeyValuesParams(const AKeyValues: TORMVariantArray; const AParams: TParams);
 var
   LIndex: integer;
 begin
@@ -532,7 +534,7 @@ begin
     AFilter.SetQueryParams(AParams);
 end;
 
-function TyaAbstractORM<T>.Concat(const AStringArray: TStringArray; const ASeparator: string): string;
+function TyaAbstractORM<T>.Concat(const AStringArray: TORMStringArray; const ASeparator: string): string;
 var
   LKey: string;
 begin
@@ -545,7 +547,7 @@ begin
   end;
 end;
 
-function TyaAbstractORM<T>.Concat(const AStringArray: TStringArray; const ASeparator: string; const APrefix: string): string;
+function TyaAbstractORM<T>.Concat(const AStringArray: TORMStringArray; const ASeparator: string; const APrefix: string): string;
 var
   LKey: string;
 begin
@@ -565,7 +567,7 @@ begin
   Exit(FFieldKeyFieldsStr);
 end;
 
-function TyaAbstractORM<T>.GetKeyValues(const AInstance: T): TVariantArray;
+function TyaAbstractORM<T>.GetKeyValues(const AInstance: T): TORMVariantArray;
 begin
   if not Assigned(AInstance) then
     raise EyaORMException.Create('yaORM.GetKeyValues: Instance not assigned.');
@@ -582,39 +584,39 @@ begin
   CopyFieldsToInstance(AFields, result);
 end;
 
-procedure TyaAbstractORM<T>.GetObjects(const ADataset: TDataset; out OCollection: TORMCollection<T>);
+procedure TyaAbstractORM<T>.GetObjects(const ADataset: TDataset; out OList: TObjectList<T>);
 var
   LObject: T;
 begin
   if not Assigned(ADataset) then
     raise EyaORMException.Create('yaORM.GetObjects: Dataset not assigned.');
 
-  OCollection := TORMCollection<T>.Create;
+  OList := TObjectList<T>.Create(false);
 
   ADataset.First;
   while not ADataset.EOF do
   begin
     LObject := GetObject(ADataset.Fields);
-    LObject.Collection := OCollection;
+    OList.Add(LObject);
     ADataset.Next;
   end;
 end;
 
-procedure TyaAbstractORM<T>.SetObjects(const ACollection: TORMCollection<T>; const ADataset: TDataset);
+procedure TyaAbstractORM<T>.SetObjects(const AList: TObjectList<T>; const ADataset: TDataset);
 var
-  LInstance: TCollectionItem;
+  LInstance: T;
   LFound: boolean;
 begin
   if not Assigned(ADataset) then
     raise EyaORMException.Create('yaORM.SetObjects: Dataset not assigned.');
-  if not Assigned(ACollection) then
-    raise EyaORMException.Create('yaORM.SetObjects: Collection not assigned.');
+  if not Assigned(AList) then
+    raise EyaORMException.Create('yaORM.SetObjects: List not assigned.');
 
   ADataset.First;
   while not ADataset.EOF do
   begin
     LFound := false;
-    for LInstance in ACollection do
+    for LInstance in AList do
       LFound := LFound or HasSameKeys(T(LInstance), ADataset.Fields);
     if LFound then
       ADataset.Next
@@ -622,7 +624,7 @@ begin
       ADataset.Delete;
   end;
 
-  for LInstance in ACollection do
+  for LInstance in AList do
     SetObject(T(LInstance), ADataset);
 end;
 
@@ -650,7 +652,7 @@ end;
 
 function TyaAbstractORM<T>.Clone(const AInstance: T): T;
 var
-  LPropertyNames: TStringArray;
+  LPropertyNames: TORMStringArray;
   LPropertyName: string;
 begin
   if not Assigned(AInstance) then
@@ -667,12 +669,12 @@ begin
   result := TyaFilter<T>.Create(self);
 end;
 
-function TyaAbstractORM<T>.GetPropertyKeyFields: TStringArray;
+function TyaAbstractORM<T>.GetPropertyKeyFields: TORMStringArray;
 begin
   result := FPropertyKeyFields;
 end;
 
-function TyaAbstractORM<T>.GetFieldValues(const AFieldNames: TStringArray; const AInstance: T): TVariantArray;
+function TyaAbstractORM<T>.GetFieldValues(const AFieldNames: TORMStringArray; const AInstance: T): TORMVariantArray;
 var
   LKeyIndex: integer;
   LPropertyName: string;
@@ -688,14 +690,14 @@ begin
   end;
 end;
 
-function TyaAbstractORM<T>.Load(const AKeyValues: TVariantArray; out OInstance: T): boolean;
+function TyaAbstractORM<T>.Load(const AKeyValues: TORMVariantArray; out OInstance: T): boolean;
 begin
   result := false;
   if Length(AKeyValues) <> Length(FPropertyKeyFields) then
     raise EyaORMException.Create('yaORM.Load: Number of KeyValues is incorrect.');
 end;
 
-procedure TyaAbstractORM<T>.Delete(const AKeyValues: TVariantArray);
+procedure TyaAbstractORM<T>.Delete(const AKeyValues: TORMVariantArray);
 begin
   if Length(AKeyValues) <> Length(FPropertyKeyFields) then
     raise EyaORMException.Create('yaORM.Delete: Number of KeyValues is incorrect.');

@@ -27,7 +27,7 @@ uses
 type
   { TyaSQLORM }
 
-  TyaSQLORM<T: TCollectionItem> = class(TyaAbstractORM<T>)
+  TyaSQLORM<T: TPersistent> = class(TyaAbstractORM<T>)
   strict protected
     FSQLConnection: TSQLConnection;
     FSQLTransaction: TSQLTransaction;
@@ -35,7 +35,7 @@ type
   public
     constructor Create(const AFactoryFunc: TFactoryFunc;
                        const ATableName: string;
-                       const APropertyKeyFields: TStringArray;
+                       const APropertyKeyFields: TORMStringArray;
                        const ASQLConnection: TSQLConnection;
                        const ASQLTransaction: TSQLTransaction = nil;
                        const AFieldToPropertyMap: TDictionary<string, string> = nil;
@@ -44,14 +44,14 @@ type
     destructor Destroy; override;
 
     //IyaORM
-    function Load(const AKeyValues: TVariantArray; out OInstance: T): boolean; override;
-    function LoadCollection(const ASQL: string; out OCollection: TORMCollection<T>): boolean; overload; override;
-    function LoadCollection(const AFilter: IyaFilter; out OCollection: TORMCollection<T>): boolean; overload; override;
-    function LoadCollection(const AKeyValues: TVariantArray; out OCollection: TORMCollection<T>): boolean; overload; override;
+    function Load(const AKeyValues: TORMVariantArray; out OInstance: T): boolean; override;
+    function LoadList(const ASQL: string; out OList: TObjectList<T>): boolean; overload; override;
+    function LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean; overload; override;
+    function LoadList(const AKeyValues: TORMVariantArray; out OList: TObjectList<T>): boolean; overload; override;
     procedure Insert(const AInstance: T); override;
     procedure Update(const AInstance: T); override;
     procedure Delete(const AInstance: T); overload; override;
-    procedure Delete(const AKeyValues: TVariantArray); overload; override;
+    procedure Delete(const AKeyValues: TORMVariantArray); overload; override;
     procedure Delete(const AFilter: IyaFilter); overload; override;
   end;
 
@@ -61,7 +61,7 @@ implementation
 
 constructor TyaSQLORM<T>.Create(const AFactoryFunc: TFactoryFunc;
                                 const ATableName: string;
-                                const APropertyKeyFields: TStringArray;
+                                const APropertyKeyFields: TORMStringArray;
                                 const ASQLConnection: TSQLConnection;
                                 const ASQLTransaction: TSQLTransaction;
                                 const AFieldToPropertyMap: TDictionary<string, string>;
@@ -87,7 +87,7 @@ begin
   inherited Destroy;
 end;
 
-function TyaSQLORM<T>.Load(const AKeyValues: TVariantArray; out OInstance: T): boolean;
+function TyaSQLORM<T>.Load(const AKeyValues: TORMVariantArray; out OInstance: T): boolean;
 var
   LQuery: TSQLQuery;
 begin
@@ -121,12 +121,12 @@ begin
   end;
 end;
 
-function TyaSQLORM<T>.LoadCollection(const ASQL: string; out OCollection: TORMCollection<T>): boolean;
+function TyaSQLORM<T>.LoadList(const ASQL: string; out OList: TObjectList<T>): boolean;
 var
   LQuery: TSQLQuery;
 begin
   result := false;
-  OCollection := nil;
+  OList := nil;
   LQuery := TSQLQuery.Create(nil);
   try
     LQuery.SQLConnection := FSQLConnection;
@@ -139,11 +139,11 @@ begin
       if not result then
         Exit;
 
-      GetObjects(LQuery, OCollection);
+      GetObjects(LQuery, OList);
     except
       on E: Exception do
       begin
-        FreeAndNil(OCollection);
+        FreeAndNil(OList);
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Load: %s', [E.Message]);
       end;
     end;
@@ -152,13 +152,13 @@ begin
   end;
 end;
 
-function TyaSQLORM<T>.LoadCollection(const AFilter: IyaFilter; out OCollection: TORMCollection<T>): boolean;
+function TyaSQLORM<T>.LoadList(const AFilter: IyaFilter; out OList: TObjectList<T>): boolean;
 var
   LQuery: TSQLQuery;
   LInstance: T;
 begin
   result := false;
-  OCollection := nil;
+  OList := nil;
   LQuery := TSQLQuery.Create(nil);
   LInstance := New;
   try
@@ -173,7 +173,7 @@ begin
       if not result then
         Exit;
 
-      GetObjects(LQuery, OCollection);
+      GetObjects(LQuery, OList);
     except
       on E: Exception do
       begin
@@ -186,13 +186,13 @@ begin
   end;
 end;
 
-function TyaSQLORM<T>.LoadCollection(const AKeyValues: TVariantArray; out OCollection: TORMCollection<T>): boolean;
+function TyaSQLORM<T>.LoadList(const AKeyValues: TORMVariantArray; out OList: TObjectList<T>): boolean;
 var
   LQuery: TSQLQuery;
   LInstance: T;
 begin
   result := false;
-  OCollection := nil;
+  OList := nil;
   LQuery := TSQLQuery.Create(nil);
   try
     LQuery.SQLConnection := FSQLConnection;
@@ -208,11 +208,11 @@ begin
       if not result then
         Exit;
 
-      GetObjects(LQuery, OCollection);
+      GetObjects(LQuery, OList);
     except
       on E: Exception do
       begin
-        FreeAndNil(OCollection);
+        FreeAndNil(OList);
         FreeAndNil(LInstance);
         raise EyaORMException.CreateFmt('TyaSQLORM<T>.Load: %s', [E.Message]);
       end;
@@ -301,7 +301,7 @@ procedure TyaSQLORM<T>.Delete(const AInstance: T);
 var
   LQuery: TSQLQuery;
   LManageTransactions: boolean;
-  LKeyValues: TVariantArray;
+  LKeyValues: TORMVariantArray;
 begin
   if not Assigned(AInstance) then
     raise EyaORMException.Create('TyaSQLORM<T>.Delete: Instance not assigned.');
@@ -336,7 +336,7 @@ begin
   end;
 end;
 
-procedure TyaSQLORM<T>.Delete(const AKeyValues: TVariantArray);
+procedure TyaSQLORM<T>.Delete(const AKeyValues: TORMVariantArray);
 var
   LManageTransactions: boolean;
   LQuery: TSQLQuery;

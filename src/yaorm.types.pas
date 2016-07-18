@@ -28,7 +28,6 @@ uses
 
 type
 {$IFDEF FPC}
-  TObjectList<T> = class(TFPGObjectList<T>);
   TList<T> = class(TFPGList<T>);
   TDictionary<K, V> = class(TFPGMap<K, V>);
   TObjectDictionary<K, V> = class(TFPGMapObject<K, V>);
@@ -36,8 +35,8 @@ type
 
   EyaORMException = class(Exception);
 
-  TStringArray = array of string;
-  TVariantArray = array of variant;
+  TORMStringArray = array of string;
+  TORMVariantArray = array of variant;
 
   TConversionFunc = function(const AName: string; const AValue: variant): variant;
 

@@ -32,7 +32,7 @@ uses
 type
   { IyaORMToJSONConverter }
 
-  IyaORMToJSONConverter<T: TCollectionItem> = interface(IInterface)
+  IyaORMToJSONConverter<T: TPersistent> = interface(IInterface)
     ['{42E56C93-8547-E611-9DEE-080027BF4002}']
     function LoadProperties(const AJSON: TJSONStringType; out OInstance: T): boolean;
     function SaveProperties(const AInstance: T): TJSONStringType;
@@ -40,7 +40,7 @@ type
 
   { TyaORMToJSONConverter }
 
-  TyaORMToJSONConverter<T: TCollectionItem> = class(TInterfacedObject, IyaORMToJSONConverter<T>)
+  TyaORMToJSONConverter<T: TPersistent> = class(TInterfacedObject, IyaORMToJSONConverter<T>)
   strict private
   var
     FORM: IyaORM<T>;
