@@ -26,7 +26,7 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <Units Count="10">
+    <Units Count="13">
       <Unit0>
         <Filename Value="yaORMExample1.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -62,20 +62,30 @@
         <UnitName Value="yaORM.Types"/>
       </Unit6>
       <Unit7>
-        <Filename Value="example.orm.pas"/>
+        <Filename Value="../common/example.address.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Example.ORM"/>
       </Unit7>
       <Unit8>
-        <Filename Value="example.address.pas"/>
+        <Filename Value="../common/example.customer.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Example.Address"/>
       </Unit8>
       <Unit9>
-        <Filename Value="example.customer.pas"/>
+        <Filename Value="../common/example.orm.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Example.Customer"/>
       </Unit9>
+      <Unit10>
+        <Filename Value="../../../yaLIB/src/yalib.arcs.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="../../../yaLIB/src/yalib.lifetimewatchers.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="../../src/yaorm.collections.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Collections"/>
+      </Unit12>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -85,7 +95,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="../../src"/>
+      <OtherUnitFiles Value="../../src;../common;../../../yaLIB/src"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>

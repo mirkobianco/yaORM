@@ -24,9 +24,9 @@ uses
   yaORM;
 
 type
-  { TGUIMediator<TImen, TGUIControl> }
+  { TGUIPropertyMediator<TImen, TGUIControl> }
 
-  TGUIMediator<TItem: TCollectionItem; TGUIControl: TWinControl> = class(TObject, IFPObserver)
+  TGUIPropertyMediator<TItem: TCollectionItem; TGUIControl: TWinControl> = class(TObject, IFPObserver)
   strict private
     FOrm: IyaORM<TItem>;
     FGUIControl: TGUIControl;
@@ -45,9 +45,9 @@ type
 
 implementation
 
-{ TGUIMediator<TItem, TGUIControl> }
+{ TGUIPropertyMediator<TItem, TGUIControl> }
 
-procedure TGUIMediator<TItem, TGUIControl>.FPOObservedChanged(ASender: TObject; Operation: TFPObservedOperation; Data: Pointer);
+procedure TGUIPropertyMediator<TItem, TGUIControl>.FPOObservedChanged(ASender: TObject; Operation: TFPObservedOperation; Data: Pointer);
 
 var
   LIntf: IFPObserved;
@@ -69,7 +69,7 @@ begin
     end;
 end;
 
-destructor TGUIMediator<TItem, TGUIControl>.Destroy;
+destructor TGUIPropertyMediator<TItem, TGUIControl>.Destroy;
 var
   LIntf: IFPObserved;
 begin
@@ -84,7 +84,7 @@ begin
   inherited Destroy;
 end;
 
-constructor TGUIMediator<TItem, TGUIControl>.Create(const AOrm: IyaORM<TItem>; const AGUIControl: TGUIControl; const AGUIControlPropertyName: string; const AInstance: TItem; const AInstancePropertyName: string);
+constructor TGUIPropertyMediator<TItem, TGUIControl>.Create(const AOrm: IyaORM<TItem>; const AGUIControl: TGUIControl; const AGUIControlPropertyName: string; const AInstance: TItem; const AInstancePropertyName: string);
 var
   LIntf: IFPObserved;
 begin
@@ -105,7 +105,7 @@ begin
     LIntf.FPOAttachObserver(self);
 end;
 
-procedure TGUIMediator<TItem, TGUIControl>.FOnExit(ASender: TObject);
+procedure TGUIPropertyMediator<TItem, TGUIControl>.FOnExit(ASender: TObject);
 begin
   FGUIControl.FPONotifyObservers(ASender, ooChange, nil);
 end;

@@ -1,6 +1,7 @@
 program yaORMExample1;
 
-{$mode objfpc}{$H+}
+{$mode DELPHI}
+{$H+}
 
 uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
@@ -14,7 +15,7 @@ uses
   yaORM.Types,
   Example.Address,
   Example.Customer,
-  Example.ORM;
+  Example.ORM, yaORM.Collections;
 
 type
 
@@ -58,7 +59,7 @@ end;
 procedure TyaORMExample.Example;
 var
   LCustomer: TCustomer;
-  LCustomers: TCustomers;
+  LCustomers: TORMCollection<TCustomer>;
   LAddress: TAddress;
   LFilter: IyaFilter;
 begin
@@ -77,9 +78,10 @@ begin
       Writeln(LCustomer.Address.Description);
 
     ORMS.CustomerORM.Insert(LCustomer);
+
+    writeln(ORMS.CustomerJSON.SaveProperties(LCustomer));
   finally
     FreeAndNil(LCustomer);
-    //LCustomer takes care of the LAddress
   end;
 
   LCustomer := ORMS.CustomerORM.New;
@@ -90,9 +92,12 @@ begin
     if Assigned(LCustomer.Address) then
         Writeln(LCustomer.Address.Description);
     ORMS.CustomerORM.Insert(LCustomer);
+
+    writeln(ORMS.CustomerJSON.SaveProperties(LCustomer));
   finally
     FreeAndNil(LCustomer);
   end;
+
 
   LCustomer := ORMS.CustomerORM.New;
   try
@@ -100,11 +105,13 @@ begin
     LCustomer.Name := 'Another Bianco';
     LCustomer.Notes := 'Test';
     ORMS.CustomerORM.Insert(LCustomer);
+
+    writeln(ORMS.CustomerJSON.SaveProperties(LCustomer));
   finally
     FreeAndNil(LCustomer);
   end;
 
-  if ORMS.CustomerORM.LoadList('SELECT * FROM CUSTOMER', LCustomers) then
+  if ORMS.CustomerORM.LoadCollection('SELECT * FROM CUSTOMER', LCustomers) then
     Writeln(IntToStr(LCustomers.Count))
   else
     Writeln('Not Found');
@@ -112,7 +119,7 @@ begin
 
   LFilter := ORMS.CustomerORM.NewFilter;
   LFilter.AddCondition('Name', ftEndsWith, 'Bianco');
-  if ORMS.CustomerORM.LoadList(LFilter, LCustomers) then
+  if ORMS.CustomerORM.LoadCollection(LFilter, LCustomers) then
     Writeln(IntToStr(LCustomers.Count))
   else
     Writeln('Not Found');
