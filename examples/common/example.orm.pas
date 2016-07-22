@@ -67,7 +67,7 @@ end;
 
 function TORMS.GetNewAddress: TAddress;
 begin
-  result := TAddress.Create(nil);
+  result := TAddress.Create;
 end;
 
 constructor TORMS.Create;
@@ -85,6 +85,7 @@ destructor TORMS.Destroy;
 begin
   FreeAndNil(FSQLConnection);
   FreeAndNil(FSQLTransaction);
+
   inherited Destroy;
 end;
 
@@ -100,13 +101,18 @@ begin
 end;
 
 function TORMS.GetAddressORM: IAddressORM;
+var
+  LArray: TStringArray;
 begin
   if not Assigned(FAddressORM) then
+  begin
+    LArray := TStringArray.Create('AddressId');
     FAddressORM := TyaSQLORM<TAddress>.Create(GetNewAddress,
                                               'ADDRESS',
-                                              TStringArray.Create('AddressId'),
+                                              LArray,
                                               FSQLConnection,
                                               FSQLTransaction);
+  end;
   result := FAddressORM;
 end;
 

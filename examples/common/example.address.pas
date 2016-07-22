@@ -16,7 +16,7 @@ type
 
   { TAddress }
 
-  TAddress = class(TCollectionItem)
+  TAddress = class(TPErsistent)
   strict private
     FAddressId: integer;
     FDescription: string;
