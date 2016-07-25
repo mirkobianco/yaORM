@@ -47,44 +47,43 @@
         <UnitName Value="yaORM.PoorMan"/>
       </Unit3>
       <Unit4>
-        <Filename Value="../../src/yaorm.relationships.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="yaORM.Relationships"/>
-      </Unit4>
-      <Unit5>
         <Filename Value="../../src/yaorm.sql.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="yaORM.SQL"/>
-      </Unit5>
-      <Unit6>
+      </Unit4>
+      <Unit5>
         <Filename Value="../../src/yaorm.types.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="yaORM.Types"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../common/example.address.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="../common/example.address.pas"/>
+        <Filename Value="../common/example.customer.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit7>
       <Unit8>
-        <Filename Value="../common/example.customer.pas"/>
+        <Filename Value="../common/example.orm.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit8>
       <Unit9>
-        <Filename Value="../common/example.orm.pas"/>
+        <Filename Value="../../../yaLIB/src/yalib.arcs.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
       <Unit10>
-        <Filename Value="../../../yaLIB/src/yalib.arcs.pas"/>
+        <Filename Value="../../../yaLIB/src/yalib.lifetimewatchers.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit10>
       <Unit11>
-        <Filename Value="../../../yaLIB/src/yalib.lifetimewatchers.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit11>
-      <Unit12>
         <Filename Value="../../src/yaorm.collections.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="yaORM.Collections"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="../../src/yaorm.relationships.onetoone.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit12>
     </Units>
   </ProjectOptions>

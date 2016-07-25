@@ -23,8 +23,7 @@ uses
   fgl,
 {$ENDIF}
   Variants,
-  TypInfo,
-  PropEdits;
+  TypInfo;
 
 type
 {$IFDEF FPC}
@@ -68,18 +67,6 @@ type
     Value: variant;
 
     class operator Equal(const ACond1, ACond2: TyaFilterCondition): Boolean;
-  end;
-
-//TNullableStringPropertyEditor
-//The default property editor for all strings and sub types (e.g. string,
-//string[20], etc.).
-
-  TVariantPropertyEditor = class(TPropertyEditor)
-  public
-    function AllEqual: Boolean; override;
-    function GetEditLimit: Integer; override;
-    function GetValue: ansistring; override;
-    procedure SetValue(const NewValue: ansistring); override;
   end;
 
 const
@@ -126,41 +113,6 @@ begin
     Exit(true);
 end;
 
-{ TVariantPropertyEditor }
-
-function TVariantPropertyEditor.AllEqual: Boolean;
-var
-  I: Integer;
-  V: Variant;
-begin
-  Result := false;
-  if PropCount > 1 then
-  begin
-    V := GetVarValue;
-    for I := 1 to PropCount - 1 do
-      if GetVarValueAt(I) <> V then Exit;
-  end;
-  Result := True;
-end;
-
-function TVariantPropertyEditor.GetEditLimit: Integer;
-begin
-  if GetPropType^.Kind = tkVariant then
-    Result := GetTypeData(GetPropType)^.MaxLength
-  else
-    Result := $0FFF;
-end;
-
-function TVariantPropertyEditor.GetValue: ansistring;
-begin
-  Result := GetVarValue;
-end;
-
-procedure TVariantPropertyEditor.SetValue(const NewValue: ansistring);
-begin
-  SetVarValue(NewValue);
-end;
-
 { TyaFilterCondition }
 
 class operator TyaFilterCondition.Equal(const ACond1, ACond2: TyaFilterCondition): Boolean;
@@ -172,17 +124,6 @@ begin
             (ACond1.FilterType = ACond2.FilterType) and
             (ACond1.Value = ACond2.Value);
 end;
-
-procedure RegisterPropertyEditors;
-begin
-  RegisterPropertyEditor(TypeInfo(Variant), nil, '', TVariantPropertyEditor);
-end;
-
-initialization
-
-  RegisterPropertyEditors;
-
-finalization
 
 end.
 

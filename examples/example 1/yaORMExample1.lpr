@@ -15,7 +15,8 @@ uses
   yaORM.Types,
   Example.Address,
   Example.Customer,
-  Example.ORM, yaORM.Collections;
+  Example.ORM,
+  yaORM.Collections;
 
 type
 
@@ -59,7 +60,7 @@ end;
 procedure TyaORMExample.Example;
 var
   LCustomer: TCustomer;
-  LCustomers: TORMCollection<TCustomer>;
+  LCustomers: TObjectList<TCustomer>;
   LAddress: TAddress;
   LFilter: IyaFilter;
 begin
@@ -111,7 +112,7 @@ begin
     FreeAndNil(LCustomer);
   end;
 
-  if ORMS.CustomerORM.LoadCollection('SELECT * FROM CUSTOMER', LCustomers) then
+  if ORMS.CustomerORM.LoadList('SELECT * FROM CUSTOMER', LCustomers) then
     Writeln(IntToStr(LCustomers.Count))
   else
     Writeln('Not Found');
@@ -119,7 +120,7 @@ begin
 
   LFilter := ORMS.CustomerORM.NewFilter;
   LFilter.AddCondition('Name', ftEndsWith, 'Bianco');
-  if ORMS.CustomerORM.LoadCollection(LFilter, LCustomers) then
+  if ORMS.CustomerORM.LoadList(LFilter, LCustomers) then
     Writeln(IntToStr(LCustomers.Count))
   else
     Writeln('Not Found');

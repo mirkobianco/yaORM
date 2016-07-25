@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <Version Value="9"/>
+    <BuildModes Active="Default"/>
+    <Units Count="40">
+      <Unit0>
+        <Filename Value="Example2.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="18" Y="13"/>
+        <UsageCount Value="176"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="frmmain.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="frmMain"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="159"/>
+        <CursorPos X="39" Y="195"/>
+        <UsageCount Value="176"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="../../src/yaorm.json.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.JSON"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="48"/>
+        <CursorPos X="39" Y="84"/>
+        <UsageCount Value="176"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="../../src/yaorm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="571"/>
+        <CursorPos X="41" Y="584"/>
+        <UsageCount Value="176"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="../../src/yaorm.poorman.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="176"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="../../src/yaorm.relationships.onetomany.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Relationships.OneToMany"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="77"/>
+        <CursorPos X="57" Y="79"/>
+        <UsageCount Value="176"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../../src/yaorm.sql.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.SQL"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="21" Y="24"/>
+        <UsageCount Value="176"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="../../src/yaorm.types.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Types"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="13"/>
+        <CursorPos X="3" Y="31"/>
+        <UsageCount Value="176"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../common/example.address.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Example.Address"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="6"/>
+        <CursorPos X="31" Y="19"/>
+        <UsageCount Value="176"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="../common/example.customer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Example.Customer"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="90"/>
+        <CursorPos Y="126"/>
+        <UsageCount Value="176"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="../common/example.orm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Example.ORM"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="77"/>
+        <CursorPos X="31" Y="95"/>
+        <UsageCount Value="176"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="../../../yaLIB/src/yalib.nullables.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaLib.Nullables"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3"/>
+        <CursorPos Y="32"/>
+        <UsageCount Value="172"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="../../src/yaorm.mediators.gui.comboboxes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Mediators.GUI.ComboBoxes"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="28" Y="3"/>
+        <UsageCount Value="87"/>
+        <Bookmarks Count="2">
+          <Item0 Y="70" ID="2"/>
+          <Item1 Y="91" ID="3"/>
+        </Bookmarks>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="../../src/yaorm.collections.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Collections"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="25" Y="3"/>
+        <UsageCount Value="46"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="../../src/yaorm.mediators.gui.properties.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Mediators.GUI.Properties"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="142"/>
+        <CursorPos X="5" Y="178"/>
+        <UsageCount Value="32"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Mediators.Lists"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="31"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="../../src/yaorm.mediators.gui.listboxes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Mediators.GUI.ListBoxes"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="29"/>
+        <CursorPos X="56" Y="65"/>
+        <UsageCount Value="31"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="../../src/yaorm.mediators.gui.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Mediators.GUI"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="25" Y="12"/>
+        <UsageCount Value="28"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="../../src/yaorm.mediators.gui.properties.delegated.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Mediators.GUI.Properties.Delegated"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="25"/>
+        <CursorPos X="84" Y="32"/>
+        <UsageCount Value="27"/>
+        <Bookmarks Count="1">
+          <Item0 X="18" Y="140" ID="2"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="../../src/yaorm.relationships.onetoone.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Relationships.OneToOne"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="104"/>
+        <CursorPos X="62" Y="140"/>
+        <UsageCount Value="26"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="/usr/local/codetyphon/typhon/components/BaseIdeintf/propedits.pp"/>
+        <UnitName Value="PropEdits"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3276"/>
+        <CursorPos X="3" Y="3276"/>
+        <UsageCount Value="8"/>
+        <Bookmarks Count="1">
+          <Item0 X="26" Y="737" ID="1"/>
+        </Bookmarks>
+      </Unit20>
+      <Unit21>
+        <Filename Value="/usr/local/codetyphon/typhon/components/BaseIdeintf/objinspstrconsts.pas"/>
+        <UnitName Value="ObjInspStrConsts"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="15"/>
+        <CursorPos X="72" Y="23"/>
+        <UsageCount Value="8"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="/usr/local/codetyphon/fpcsrc/rtl/objpas/typinfo.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="389"/>
+        <CursorPos X="23" Y="409"/>
+        <UsageCount Value="15"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="/usr/local/codetyphon/fpcsrc/rtl/objpas/classes/classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="407"/>
+        <CursorPos X="104" Y="441"/>
+        <UsageCount Value="73"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="/usr/local/codetyphon/fpcsrc/rtl/objpas/classes/persist.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="89"/>
+        <CursorPos X="3" Y="96"/>
+        <UsageCount Value="53"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="/usr/local/codetyphon/typhon/lcl/stdctrls.pp"/>
+        <UnitName Value="StdCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="334"/>
+        <CursorPos X="32" Y="367"/>
+        <UsageCount Value="66"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="/usr/local/codetyphon/typhon/lcl/controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2219"/>
+        <CursorPos X="3" Y="2260"/>
+        <UsageCount Value="65"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="/usr/local/codetyphon/typhon/lcl/lclclasses.pp"/>
+        <UnitName Value="LCLClasses"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="24"/>
+        <CursorPos X="3" Y="42"/>
+        <UsageCount Value="45"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="/usr/local/codetyphon/typhon/lcl/include/customedit.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="592"/>
+        <CursorPos X="3" Y="594"/>
+        <UsageCount Value="45"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="/usr/local/codetyphon/typhon/components/lz_RttiControls/source/rttigrids.pas"/>
+        <UnitName Value="RTTIGrids"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="908"/>
+        <CursorPos Y="926"/>
+        <UsageCount Value="8"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="/usr/local/codetyphon/typhon/lcl/spin.pp"/>
+        <UnitName Value="Spin"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="172"/>
+        <CursorPos X="14" Y="172"/>
+        <UsageCount Value="7"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="/usr/local/codetyphon/typhon/lcl/lcltype.pp"/>
+        <UnitName Value="LCLType"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="15"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="/usr/local/codetyphon/fpcsrc/rtl/objpas/classes/collect.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="402"/>
+        <CursorPos X="71" Y="406"/>
+        <UsageCount Value="19"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="/usr/local/codetyphon/fpcsrc/rtl/objpas/fgl.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="803"/>
+        <CursorPos Y="825"/>
+        <UsageCount Value="12"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="/usr/local/codetyphon/fpcsrc/rtl/inc/objpash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="191"/>
+        <CursorPos X="38" Y="215"/>
+        <UsageCount Value="9"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="/usr/local/codetyphon/fpcsrc/rtl/inc/objpas.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="367"/>
+        <CursorPos X="12" Y="371"/>
+        <UsageCount Value="9"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="/usr/local/codetyphon/fpcsrc/packages/fcl-db/src/sqldb/sqlite/sqlite3conn.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="23"/>
+        <CursorPos X="3" Y="41"/>
+        <UsageCount Value="9"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="../../src/yaorm.mediators.instances.pas"/>
+        <UnitName Value="yaORM.Mediators.Instances"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="63"/>
+        <CursorPos Y="75"/>
+        <UsageCount Value="22"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <UnitName Value="yaORM.Mediators.Lists.Delegated"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="72"/>
+        <CursorPos X="60" Y="91"/>
+        <UsageCount Value="20"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="yaORM.Mediators.Lists.Delegated"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="126"/>
+        <CursorPos X="16" Y="144"/>
+        <UsageCount Value="21"/>
+        <Bookmarks Count="1">
+          <Item0 X="11" Y="86" ID="1"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit39>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="33" Column="21" TopLine="4"/>
+      </Position1>
+      <Position2>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="34" Column="21" TopLine="4"/>
+      </Position2>
+      <Position3>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="39" Column="56" TopLine="9"/>
+      </Position3>
+      <Position4>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="55" Column="71" TopLine="25"/>
+      </Position4>
+      <Position5>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="56" Column="71" TopLine="26"/>
+      </Position5>
+      <Position6>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="76" Column="47" TopLine="46"/>
+      </Position6>
+      <Position7>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="77" Column="63" TopLine="47"/>
+      </Position7>
+      <Position8>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="113" Column="56" TopLine="83"/>
+      </Position8>
+      <Position9>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="175" Column="88" TopLine="145"/>
+      </Position9>
+      <Position10>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="184" Column="88" TopLine="154"/>
+      </Position10>
+      <Position11>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="195" Column="30" TopLine="165"/>
+      </Position11>
+      <Position12>
+        <Filename Value="../../src/yaorm.mediators.gui.properties.delegated.pas"/>
+        <Caret Line="175" Column="43" TopLine="149"/>
+      </Position12>
+      <Position13>
+        <Filename Value="Example2.lpr"/>
+        <Caret Line="13" Column="25"/>
+      </Position13>
+      <Position14>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="149" Column="30" TopLine="142"/>
+      </Position14>
+      <Position15>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Column="21"/>
+      </Position15>
+      <Position16>
+        <Filename Value="../../src/yaorm.mediators.lists.pas"/>
+        <Caret Line="175" Column="21" TopLine="165"/>
+      </Position16>
+      <Position17>
+        <Filename Value="../../src/yaorm.mediators.gui.properties.delegated.pas"/>
+        <Caret Line="24" Column="42"/>
+      </Position17>
+      <Position18>
+        <Filename Value="../../src/yaorm.mediators.gui.properties.delegated.pas"/>
+        <Caret Line="173" Column="52" TopLine="143"/>
+      </Position18>
+      <Position19>
+        <Filename Value="../../src/yaorm.mediators.gui.properties.delegated.pas"/>
+        <Caret Line="28" Column="64"/>
+      </Position19>
+      <Position20>
+        <Filename Value="../../src/yaorm.mediators.gui.properties.delegated.pas"/>
+        <Caret Line="173" Column="63" TopLine="143"/>
+      </Position20>
+      <Position21>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <Caret Line="107" Column="50" TopLine="84"/>
+      </Position21>
+      <Position22>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <Caret Line="83" Column="21" TopLine="53"/>
+      </Position22>
+      <Position23>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <Caret Line="50" Column="24" TopLine="30"/>
+      </Position23>
+      <Position24>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <Caret Line="39" Column="27" TopLine="17"/>
+      </Position24>
+      <Position25>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <Caret Line="196" Column="51" TopLine="191"/>
+      </Position25>
+      <Position26>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <Caret Line="12" Column="37"/>
+      </Position26>
+      <Position27>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <Caret Line="219" Column="56" TopLine="191"/>
+      </Position27>
+      <Position28>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <Caret Line="117" Column="3" TopLine="99"/>
+      </Position28>
+      <Position29>
+        <Filename Value="../../src/yaorm.mediators.lists.delegated.pas"/>
+        <Caret Line="38" Column="34" TopLine="19"/>
+      </Position29>
+      <Position30>
+        <Filename Value="../common/example.customer.pas"/>
+        <Caret Line="33" Column="41" TopLine="18"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="2">
+      <Item1>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="../../src/yaorm.mediators.instances.pas"/>
+        <Line Value="76"/>
+      </Item1>
+      <Item2>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="../../src/yaorm.mediators.instances.pas"/>
+        <Line Value="75"/>
+      </Item2>
+    </BreakPoints>
+  </Debugging>
+</CONFIG>
