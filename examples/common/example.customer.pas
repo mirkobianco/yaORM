@@ -11,7 +11,7 @@ uses
   Variants,
   yaORM,
   yaORM.Types,
-  yaORM.Relationships,
+  yaORM.Relationships.OneToOne,
   Example.Address;
 
 type
@@ -36,6 +36,7 @@ type
 
     function GetAddress: TAddress;
     procedure SetAddress(const AAddress: TAddress);
+
   public
     constructor Create(const ACustomerORM: IyaORM<TCustomer>; const AAddressORM: IAddressORM); reintroduce;
     destructor Destroy; override;
