@@ -1,6 +1,6 @@
 (*
   yet another ORM - for FreePascal
-  ORM List (collection) Mediator
+  ORM Delegated List (collection) Mediator
 
   Copyright (C) 2016 Mirko Bianco
   See the file LICENSE, included in this distribution,
@@ -9,7 +9,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 *)
-unit yaORM.Mediators.Lists;
+unit yaORM.Mediators.Lists.Delegated;
 
 {$mode Delphi}{$H+}
 
@@ -26,14 +26,18 @@ uses
   yaORM.Mediators.GUI;
 
 type
-  { TListMediator<TItem> }
+  { TDelegatedListMediator<TSourceItem, TDestItem> }
 
-  TListMediator<TItem: TPersistent> = class(TPersistent, IFPObserver)
+  TDelegatedListMediator<TSourceItem: TPersistent; TDestItem: TPersistent> = class(TPersistent, IFPObserver)
   public
   type
-    TGUIItemMediator = TGUIMediator<TItem>;
+    TGUIItemMediator = TGUIMediator<TSourceItem>;
+    TDestItemObjectList = TObjectList<TDestItem>;
+    TGetDestInstanceFunc = function(const ASourceInstance: TSourceItem): TDestItemObjectList; //TObjectList<TDestItem>;
   strict private
-    FList: TObjectList<TItem>;
+    FSourceInstance: TSourceItem;
+    FList: TObjectList<TSourceItem>;
+    FGetDestInstanceFunc: TGetDestInstanceFunc;
     FUpdateCount: integer;
 
     FPropertyMediators: TFPGObjectList<TGUIItemMediator>;
@@ -44,30 +48,31 @@ type
     //IFPObserver
     procedure FPOObservedChanged(ASender : TObject; Operation : TFPObservedOperation; Data : Pointer);
   public
-    constructor Create(const AList: TObjectList<TItem>);
+    constructor Create(const ASourceInstance: TSourceItem;
+                       const AGetDestInstanceFunc: TGetDestInstanceFunc);
     destructor Destroy; override;
 
     procedure DisableControl;
     procedure EnableControl;
 
-    procedure ChangeSelectedItem(const AItem: TItem);
+    procedure ChangeSelectedItem(const AItem: TSourceItem);
 
     procedure AttachPropertyMediator(const AMediator: TGUIItemMediator);
     procedure DetachPropertyMediator(const AMediator: TGUIItemMediator);
 
-    property List: TObjectList<TItem> read FList;
+    property List: TObjectList<TSourceItem> read FList;
   end;
 
 implementation
 
-{ TListMediator<TItem> }
+{ TDelegatedListMediator<TSourceItem> }
 
-procedure TListMediator<TItem>.FPOObservedChanged(ASender: TObject; Operation: TFPObservedOperation; Data: Pointer);
+procedure TDelegatedListMediator<TSourceItem, TDestItem>.FPOObservedChanged(ASender: TObject; Operation: TFPObservedOperation; Data: Pointer);
 var
   LIntf: IFPObserved;
-  LItem: TItem;
+  LItem: TSourceItem;
 begin
-  LItem := TItem(Data);
+  LItem := TSourceItem(Data);
   case Operation of
     ooFree: begin
       if Supports(ASender, IFPObserved, LIntf) and Assigned(LIntf) then
@@ -77,7 +82,18 @@ begin
         FPropertyMediators.Extract(ASender as TGUIItemMediator);
     end;
     ooChange: begin
+      if ASender.ClassType = TSourceItem then
+      begin
+        FinalizeListElements;
+        if Supports(FList, IFPObserved, LIntf) and Assigned(LIntf) then
+          LIntf.FPODetachObserver(self);
 
+        FList := FGetDestInstanceFunc(TSourceItem(ASender));
+
+        if Supports(FList, IFPObserved, LIntf) and Assigned(LIntf) then
+          LIntf.FPOAttachObserver(self);
+        InitializeListElements;
+      end;
     end;
     ooAddItem: begin
       if Supports(LItem, IFPObserved, LIntf) and Assigned(LIntf) then
@@ -93,16 +109,23 @@ begin
   end;
 end;
 
-constructor TListMediator<TItem>.Create(const AList: TObjectList<TItem>);
+constructor TDelegatedListMediator<TSourceItem, TDestItem>.Create(const ASourceInstance: TSourceItem;
+                                                                  const AGetDestInstanceFunc: TGetDestInstanceFunc);
 var
   LIntf: IFPObserved;
 begin
   inherited Create;
-  FList := AList;
+  FSourceInstance := ASourceInstance;
+  FGetDestInstanceFunc := AGetDestInstanceFunc;
+  FList := FGetDestInstanceFunc(ASourceInstance);
 
   InitializeListElements;
 
   FUpdateCount := 0;
+
+  { attach Source Instance }
+  if Supports(ASourceInstance, IFPObserved, LIntf) and Assigned(LIntf) then
+    LIntf.FPOAttachObserver(self);
 
   { attach List }
   if Supports(FList, IFPObserved, LIntf) and Assigned(LIntf) then
@@ -113,10 +136,14 @@ begin
   FPropertyMediators := TFPGObjectList<TGUIItemMediator>.Create(false);
 end;
 
-destructor TListMediator<TItem>.Destroy;
+destructor TDelegatedListMediator<TSourceItem, TDestItem>.Destroy;
 var
   LIntf: IFPObserved;
 begin
+  { detach Source Instance }
+  if Supports(FSourceInstance, IFPObserved, LIntf) and Assigned(LIntf) then
+    LIntf.FPODetachObserver(self);
+
   { detach List }
   if Supports(FList, IFPObserved, LIntf) and Assigned(LIntf) then
     LIntf.FPODetachObserver(self);
@@ -128,12 +155,12 @@ begin
   inherited Destroy;
 end;
 
-procedure TListMediator<TItem>.DisableControl;
+procedure TDelegatedListMediator<TSourceItem, TDestItem>.DisableControl;
 begin
   Inc(FUpdateCount);
 end;
 
-procedure TListMediator<TItem>.EnableControl;
+procedure TDelegatedListMediator<TSourceItem, TDestItem>.EnableControl;
 begin
   if FUpdateCount > 0 then
     Dec(FUpdateCount);
@@ -144,9 +171,9 @@ begin
   FPOObservedChanged(FList, ooChange, nil);
 end;
 
-procedure TListMediator<TItem>.InitializeListElements;
+procedure TDelegatedListMediator<TSourceItem, TDestItem>.InitializeListElements;
 var
-  LItem: TItem;
+  LItem: TSourceItem;
   LIndex: integer;
   LIntf: IFPObserved;
 begin
@@ -158,9 +185,9 @@ begin
   end;
 end;
 
-procedure TListMediator<TItem>.FinalizeListElements;
+procedure TDelegatedListMediator<TSourceItem, TDestItem>.FinalizeListElements;
 var
-  LItem: TItem;
+  LItem: TSourceItem;
   LIndex: integer;
   LIntf: IFPObserved;
 begin
@@ -172,7 +199,7 @@ begin
   end;
 end;
 
-procedure TListMediator<TItem>.AttachPropertyMediator(const AMediator: TGUIItemMediator);
+procedure TDelegatedListMediator<TSourceItem, TDestItem>.AttachPropertyMediator(const AMediator: TGUIItemMediator);
 begin
   if not Assigned(AMediator) then
     Exit;
@@ -181,7 +208,7 @@ begin
   AMediator.FPOAttachObserver(self);
 end;
 
-procedure TListMediator<TItem>.DetachPropertyMediator(const AMediator: TGUIItemMediator);
+procedure TDelegatedListMediator<TSourceItem, TDestItem>.DetachPropertyMediator(const AMediator: TGUIItemMediator);
 begin
   if not Assigned(AMediator) then
     Exit;
@@ -190,7 +217,7 @@ begin
   AMediator.FPODetachObserver(self);
 end;
 
-procedure TListMediator<TItem>.ChangeSelectedItem(const AItem: TItem);
+procedure TDelegatedListMediator<TSourceItem, TDestItem>.ChangeSelectedItem(const AItem: TSourceItem);
 var
   LMediator: TGUIItemMediator;
 begin

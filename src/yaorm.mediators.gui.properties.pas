@@ -20,14 +20,10 @@ uses
   SysUtils,
   Controls,
   TypInfo,
-  yaORM.Types;
+  yaORM.Types,
+  yaORM.Mediators.GUI;
 
 type
-  TGUIMediator<TItem: TPersistent> = class(TCollectionItem)
-  public
-    procedure ChangeInstance(const AInstance: TItem); virtual; abstract;
-  end;
-
   { TGUIPropertyMediator<TItem, TGUIControl> }
 
   TGUIPropertyMediator<TItem: TPersistent; TGUIControl: TWinControl> = class(TGUIMediator<TItem>, IFPObserver)
